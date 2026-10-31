@@ -1,0 +1,86 @@
+"""Wartungsmodus und Vorschau."""
+
+from .fake import PNG
+
+
+def text(response) -> str:
+    return response.content.decode()
+
+
+def test_wartung_zeigt_wartungsseite(client, hubiplan):
+    hubiplan.maintenance = True
+    for path in ("/", "/vorstand/", "/termine/", "/kontakt/"):
+        r = client.get(path)
+        assert r.status_code == 503, path
+        assert "Bald geht es los." in text(r)
+        assert r["X-Robots-Tag"] == "noindex"
+    # Kein Menü in der Wartung
+    assert ">Vorstand</a>" not in text(client.get("/"))
+    assert "Disallow: /" in text(client.get("/robots.txt"))
+
+
+def test_wartung_impressum_bleibt(client, hubiplan):
+    hubiplan.maintenance = True
+    assert client.get("/impressum/").status_code == 200
+    assert client.get("/datenschutz/").status_code == 200
+
+
+def test_wartung_keine_bilder(client, hubiplan):
+    hubiplan.maintenance = True
+    assert client.get("/medien/a/images/festbild1/").status_code == 404
+    # Logo und Wappen bleiben (Kopf der Wartungsseite)
+    assert client.get("/medien/m/logos/wappen.png").status_code == 200
+
+
+def test_allgemeine_wartung(client, hubiplan, settings):
+    settings.MAINTENANCE = True
+    r = client.get("/")
+    assert r.status_code == 503
+    assert not hubiplan.calls
+
+
+def test_vorschau(client, hubiplan):
+    hubiplan.maintenance = True
+    r = client.get("/vorschau/?schluessel=gut")
+    assert r.status_code == 302
+    assert r["Location"] == "/"
+    cookie = r.cookies["vorschau"]
+    assert cookie.value == hubiplan.preview_session
+    assert cookie["httponly"]
+    assert cookie["samesite"] == "Lax"
+    r = client.get("/vorstand/")
+    assert r.status_code == 200
+    html = text(r)
+    assert "Vorschau beenden" in html
+    assert "Max Muster" in html
+    assert r["Cache-Control"] == "private, no-store"
+    # Kontaktformular in der Vorschau trägt die Vorschau-Sitzung
+    assert f'data-vorschau="{hubiplan.preview_session}"' in text(client.get("/kontakt/"))
+    # Bilder in der Vorschau
+    r = client.get("/medien/a/images/festbild1/")
+    assert r.content == PNG
+    # Bilder darf der eigene Browser behalten (Wappen flackert sonst bei jedem Seitenwechsel)
+    assert r["Cache-Control"] == "private, max-age=600"
+    # Vorschau-Antworten werden nicht zwischengespeichert
+    n = len(hubiplan.calls)
+    client.get("/vorstand/")
+    assert len(hubiplan.calls) > n
+    # Beenden
+    r = client.get("/vorschau/ende/")
+    assert r.cookies["vorschau"].value == ""
+    client.cookies.pop("vorschau")
+    assert client.get("/vorstand/").status_code == 503
+
+
+def test_vorschau_ungueltig(client, hubiplan):
+    r = client.get("/vorschau/?schluessel=falsch")
+    assert r.status_code == 403
+    assert "vorschau" not in r.cookies
+    assert client.get("/vorschau/").status_code == 400
+
+
+def test_vorschau_cookie_unsauber(client, hubiplan):
+    hubiplan.maintenance = True
+    client.cookies["vorschau"] = "<b>"
+    assert client.get("/").status_code == 503
+    assert all(c[2] is None for c in hubiplan.calls)

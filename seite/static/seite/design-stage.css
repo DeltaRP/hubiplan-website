@@ -1,0 +1,41 @@
+/* Design „Bühne“: schlanker Kopf (oben angeheftet), großes Titelbild mit dem Namen, Startseite in Bändern */
+body { overflow-x: clip; }
+.kopf { position: sticky; top: 0; z-index: 6; border-bottom: 1px solid var(--linie); }
+.marke { font-size: 1rem; }
+.marke img { width: 44px; height: 44px; }
+/* Eine Zeile erst auf breiten Bildschirmen; darunter wie Klassisch zwei Zeilen */
+@media (min-width: 80rem) {
+  .kopf .breite { max-width: 80rem; }
+  .kopf-innen { flex-wrap: nowrap; min-height: 3.8rem; }
+  .marke { flex: 0 1 17rem; min-width: 12rem; font-size: .95rem; }
+  .menue-breit { order: 0; flex: 1 1 0; min-width: 0; border-top: 0; padding: 0; }
+  .menue-breit ul { justify-content: flex-end; flex-wrap: wrap; margin: 0; gap: 0; }
+  .menue-breit a { padding: .4rem .45rem; font-size: .92rem; }
+}
+/* Titelbild in voller Breite, Name darauf */
+.buehne { position: relative; margin: -1.5rem calc(50% - 50vw) 0; background: var(--farbe-band); color: var(--auf-band); min-height: 12rem; }
+.buehne .karussell, .buehne .titelbild { margin: 0; }
+.buehne .karussell-band, .buehne .titelbild img { border-radius: 0; }
+.buehne .karussell-bild img { height: 34rem; max-height: 70vh; width: 100%; object-fit: cover; }
+.buehne .karussell-steuerung { position: absolute; right: 16px; top: 1rem; z-index: 2; margin: 0; }
+.buehne .karussell-zaehler { background: rgb(0 0 0 / .55); color: #fff; padding: .1rem .5rem; border-radius: 99px; }
+.buehne-name {
+  margin: 0; padding: 3rem max(16px, calc(50vw - 31rem)) 2rem;
+  font-size: clamp(1.5rem, 4.5vw, 2.6rem); font-weight: 700; line-height: 1.15;
+}
+.buehne:has(img) .buehne-name {
+  position: absolute; left: 0; right: 0; bottom: 0; color: #fff; pointer-events: none;
+  background: linear-gradient(transparent, rgb(0 0 0 / .7));
+}
+/* Bausteine als Bänder über die volle Breite, abwechselnd hell und farbig */
+main.start > section { margin-inline: calc(50% - 50vw); padding: 1.5rem max(16px, calc(50vw - 31rem)) 2rem; background: var(--flaeche); }
+main.start > section:nth-of-type(even) { background: var(--farbe-band); color: var(--auf-band); }
+main.start > section:nth-of-type(4n) { background: var(--farbe-band2); color: var(--auf-band2); }
+main.start > section:nth-of-type(even) > h2,
+main.start > section:nth-of-type(even) > p,
+main.start > section:nth-of-type(even) > .klein { color: inherit; }
+main.start > section:nth-of-type(even) .knopf { background: var(--farbe-zier); color: var(--auf-zier); }
+main.start > section:nth-of-type(even) :focus-visible { outline-color: currentColor; }
+main.start .karte, main.start .termin, main.start .kacheln a { color: var(--text); }
+main.start .begruessung .text { font-size: 1.08rem; }
+main.start { padding-bottom: 0; }

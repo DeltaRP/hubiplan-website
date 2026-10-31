@@ -1,0 +1,344 @@
+/* Vereinswebseite: schlicht, fürs Handy zuerst, Farben aus HUBIplan (--primaer usw.) */
+:root {
+  --primaer: #1f4e2c;
+  --auf-primaer: #fff;
+  --akzent: #c9a227;
+  /* Text in Vereinsfarbe (Links, Aufklapper): abgedunkelt auf 4,5 : 1 (site.link_color) */
+  --link: #1f4e2c;
+  --auf-akzent: #1d2421;
+  --text: #1d2421;
+  --text-leise: #5a625e;
+  --grund: #fbfaf7;
+  --flaeche: #fff;
+  --linie: #e2e0d9;
+  --rund: 10px;
+  /* Farben je Rolle des Designs (aus HUBIplan, siehe site.css_vars) */
+  --farbe-kopf: var(--primaer); --auf-kopf: var(--auf-primaer);
+  --farbe-menue: var(--akzent); --auf-menue: var(--auf-akzent);
+  --farbe-zier: var(--akzent); --auf-zier: var(--auf-akzent);
+  --farbe-fuss: #1d2421; --auf-fuss: #fff;
+  --farbe-band: var(--primaer); --auf-band: var(--auf-primaer);
+  --farbe-band2: var(--primaer); --auf-band2: var(--auf-primaer);
+  --farbe-datum: var(--primaer); --auf-datum: var(--auf-primaer);
+  --schrift-titel: inherit;
+  --breite: 64rem;
+  color-scheme: light;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font: 17px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--text);
+  background: var(--grund);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+main { flex: 1; padding-top: 1.5rem; padding-bottom: 3rem; }
+img { max-width: 100%; height: auto; }
+/* Regel von Ralf: Links nie unterstrichen; erkennbar an Farbe und Stärke */
+a { color: var(--link); }
+a, a:hover, a:focus { text-decoration: none; }
+/* Ohne Unterstreichung sind Links im Inhalt immer fett (WCAG 1.4.1: Merkmal neben der Farbe) */
+main a, .fuss a { font-weight: 600; }
+a:hover { opacity: .8; }
+/* Fokusrahmen: im Inhalt in abgedunkelter Vereinsfarbe, im farbigen Kopf in dessen
+   Schriftfarbe, im dunklen Fuß weiß; jeweils mind. 3 : 1 (WCAG 1.4.11, 2.4.7) */
+a:focus-visible, button:focus-visible, summary:focus-visible, select:focus-visible,
+input:focus-visible, textarea:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; }
+.kopf :focus-visible { outline-color: var(--auf-kopf); }
+.kopf .menue nav :focus-visible { outline-color: var(--link); }
+.fuss :focus-visible { outline-color: var(--auf-fuss); }
+h1, h2, h3 { line-height: 1.25; margin: 1.6em 0 .5em; font-family: var(--schrift-titel); }
+h1 { font-size: clamp(1.6rem, 4.5vw, 2.3rem); margin-top: .3em; }
+h2 { font-size: 1.35rem; }
+h3 { font-size: 1.1rem; margin-top: 0; }
+table { border-collapse: collapse; width: 100%; margin: .5rem 0 1rem; font-size: .95rem; }
+th, td { text-align: left; padding: .45rem .6rem; border-bottom: 1px solid var(--linie); vertical-align: top; }
+/* Ämter- und Würdenlisten: überall gleiche Spaltenbreiten (Ralf 31.10.) */
+.zeitliste { table-layout: fixed; }
+.zeitliste th:first-child { width: 10rem; }
+th { color: var(--text-leise); font-weight: 600; }
+code { word-break: break-all; font-size: .85em; }
+
+.breite { width: 100%; max-width: var(--breite); margin: 0 auto; padding-left: 16px; padding-right: 16px; }
+.klein { font-size: .88rem; color: var(--text-leise); }
+/* HUBIplan-Zeichen im Fuß (Akte mit H): bringt den eigenen Hintergrund mit, auf hellem und dunklem Fuß erkennbar */
+.hubiplan-zeichen { vertical-align: -.28em; }
+.gross { font-size: 1.2rem; font-weight: 600; margin: 0; }
+.sprung { position: absolute; left: -999px; }
+.sprung:focus { left: 1rem; top: 1rem; background: var(--flaeche); color: var(--link); padding: .5rem 1rem; z-index: 10; }
+
+/* Kopf und Menü */
+.vorschau-hinweis {
+  background: var(--akzent); color: var(--auf-akzent); text-align: center;
+  padding: .5rem 1rem; font-size: .95rem;
+}
+.vorschau-hinweis a { color: inherit; font-weight: 600; margin-left: .5rem; }
+.kopf { background: var(--farbe-kopf); color: var(--auf-kopf); }
+.kopf-innen { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 4.5rem; position: relative; }
+.marke { flex: 0 1 auto; min-width: 0; display: flex; align-items: center; gap: .75rem; color: inherit; text-decoration: none; font-weight: 700; font-size: 1.1rem; line-height: 1.25; padding: .5rem 0; }
+.marke img { width: 56px; height: 56px; object-fit: contain; flex: none; }
+/* Lange Vereinsnamen brechen notfalls im Wort um, statt unter den Menüknopf zu laufen */
+.marke span { overflow-wrap: anywhere; hyphens: auto; }
+.menue summary {
+  list-style: none; cursor: pointer; display: flex; align-items: center; gap: .5rem;
+  padding: .6rem .8rem; border-radius: var(--rund); border: 1px solid currentColor;
+}
+.menue summary::-webkit-details-marker { display: none; }
+.menue-symbol, .menue-symbol::before, .menue-symbol::after {
+  display: block; width: 20px; height: 2px; background: currentColor; position: relative; content: "";
+}
+.menue-symbol::before { position: absolute; top: -6px; }
+.menue-symbol::after { position: absolute; top: 6px; }
+.menue nav {
+  position: absolute; right: 16px; top: 100%; z-index: 5; min-width: 15rem;
+  background: var(--flaeche); color: var(--text); border-radius: var(--rund);
+  box-shadow: 0 8px 30px rgba(0,0,0,.18); padding: .5rem;
+}
+.menue ul { list-style: none; margin: 0; padding: 0; }
+.menue a { display: block; padding: .65rem .9rem; border-radius: 6px; text-decoration: none; color: var(--text); }
+.menue a:hover { background: var(--grund); }
+.menue a[aria-current="page"] { font-weight: 700; box-shadow: inset 4px 0 0 var(--farbe-menue); }
+.menue-breit { display: none; flex: 1 1 auto; }
+.menue-breit ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: nowrap; gap: .25rem; justify-content: flex-end; }
+.menue-breit a { display: block; color: var(--auf-kopf); padding: .45rem .55rem; font-size: .95rem; white-space: nowrap; border-radius: 6px; text-decoration: none; }
+.menue-breit a:hover { background: color-mix(in srgb, var(--auf-kopf) 15%, transparent); }
+.menue-breit a[aria-current="page"] { box-shadow: inset 0 -3px 0 var(--farbe-menue); font-weight: 700; }
+/* Untermenü (z. B. „Würdenträger“): am Bildschirm aufklappbar, im Handymenü eingerückt */
+.menue-breit .hat-unter { position: relative; }
+.menue-breit .untermenue summary {
+  list-style: none; cursor: pointer; color: var(--auf-kopf); padding: .45rem .55rem; font-size: .95rem;
+  white-space: nowrap; border-radius: 6px;
+}
+.menue-breit .untermenue summary::-webkit-details-marker { display: none; }
+.menue-breit .untermenue summary::after { content: " ▾"; font-size: .8em; }
+.menue-breit .untermenue summary:hover { background: color-mix(in srgb, var(--auf-kopf) 15%, transparent); }
+.menue-breit .untermenue summary.aktiv { box-shadow: inset 0 -3px 0 var(--farbe-menue); font-weight: 700; }
+.menue-breit .untermenue ul {
+  position: absolute; right: 0; top: 100%; z-index: 6; min-width: 13rem; display: block;
+  background: var(--flaeche); border-radius: var(--rund); box-shadow: 0 8px 30px rgba(0,0,0,.18); padding: .4rem;
+}
+.menue-breit .untermenue ul a { color: var(--text); white-space: normal; }
+.menue-breit .untermenue ul a:hover { background: var(--grund); }
+.menue-breit .untermenue ul a[aria-current="page"] { box-shadow: inset 4px 0 0 var(--farbe-menue); }
+.menue-breit .untermenue :focus-visible { outline-color: var(--link); }
+.menue-breit .untermenue summary:focus-visible { outline-color: var(--auf-kopf); }
+.menue .menue-gruppe { display: block; padding: .65rem .9rem .2rem; font-weight: 700; color: var(--text-leise, var(--text)); }
+.menue ul ul { padding-left: .8rem; }
+@media (min-width: 64rem) {
+  .menue { display: none; }
+  .menue-breit { display: block; }
+}
+
+/* Fuß */
+.fuss { background: var(--farbe-fuss); color: var(--auf-fuss); font-size: .88rem; line-height: 1.45; }
+.fuss a { color: var(--auf-fuss); }
+.fuss-innen { padding-top: .9rem; padding-bottom: .9rem; display: flex; flex-wrap: wrap; gap: .3rem 1.5rem; align-items: baseline; justify-content: space-between; }
+.fuss .klein { color: inherit; opacity: .85; margin: 0; }
+.sozial, .recht { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: .4rem 1.2rem; }
+.fuss .klein { flex-basis: 100%; font-size: .8rem; }
+.fuss .mitglied { margin: 0; }
+
+/* Bausteine */
+.knopf {
+  display: inline-block; background: var(--primaer); color: var(--auf-primaer); border: 0;
+  border-radius: var(--rund); padding: .65rem 1.1rem; font: inherit; font-weight: 600;
+  text-decoration: none; cursor: pointer; margin: .25rem .25rem .25rem 0;
+}
+.knopf:hover { filter: brightness(1.1); }
+.knopf:disabled { opacity: .6; cursor: wait; }
+.knopf.hell { background: var(--flaeche); color: var(--link); border: 2px solid var(--link); }
+.klein-knopf { padding: .35rem .8rem; font-size: .9rem; }
+.karte { background: var(--flaeche); border: 1px solid var(--linie); border-radius: var(--rund); padding: 1rem 1.2rem; margin-bottom: 1rem; }
+.karten { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); }
+.karten .karte { margin: 0; }
+.karte > h2:first-child, .karte > section > h2:first-child { margin-top: 0; }
+/* Ämter: ein Block je Amt (Ralf 31.10.) */
+.aemter { grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr)); align-items: start; }
+.aemter h2 { font-size: 1.15rem; }
+.aemter .zeitliste { margin-bottom: 0; }
+.aemter .zeitliste th:first-child { width: 8.5rem; }
+.titelbild { margin: 0 0 1rem; }
+.titelbild img { border-radius: var(--rund); width: 100%; max-height: 28rem; object-fit: cover; }
+figcaption { font-size: .88rem; color: var(--text-leise); margin-top: .3rem; }
+.text { max-width: 44rem; }
+.text img { border-radius: var(--rund); }
+.brotkrumen { margin: 0; font-size: .92rem; }
+.hinweis-seite { text-align: center; padding: 3rem 0; max-width: 36rem; margin: 0 auto; }
+
+/* Personen */
+.personen { list-style: none; padding: 0; margin: 0 0 .5rem; display: grid; gap: .8rem 1.5rem; grid-template-columns: repeat(auto-fill, minmax(min(15rem, 100%), 1fr)); }
+.person { display: flex; gap: .8rem; align-items: center; }
+.person img, .ohne-foto { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; flex: none; }
+.ohne-foto { display: grid; place-items: center; background: var(--primaer); color: var(--auf-primaer); font-size: 1.6rem; font-weight: 700; opacity: .85; }
+
+/* Termine */
+.termine { list-style: none; padding: 0; margin: 0; display: grid; gap: .8rem; }
+.termin { display: flex; gap: 1rem; background: var(--flaeche); border: 1px solid var(--linie); border-radius: var(--rund); padding: .9rem 1rem; }
+.termin h3 { margin: 0 0 .2rem; }
+.termin p { margin: .2rem 0; }
+.termin-datum { flex: none; width: 3.6rem; text-align: center; background: var(--farbe-datum); color: var(--auf-datum); border-radius: 8px; padding: .35rem 0; line-height: 1.1; align-self: flex-start; }
+.termin-datum span { display: block; font-size: 1.5rem; font-weight: 700; }
+.termin-datum small { text-transform: uppercase; font-size: .75rem; letter-spacing: .05em; }
+.termin-datum .termin-jahr { display: block; text-transform: none; }
+.termin-text { min-width: 0; }
+/* Ganze Karte anklickbar, Fenster mit allen Angaben (Ralf 2026-10-31) */
+.termin { cursor: pointer; }
+.termin:hover { border-color: var(--primaer); }
+.termin-knopf { all: unset; cursor: pointer; font: inherit; color: inherit; }
+.termin-knopf:focus-visible { outline: 2px solid var(--primaer); outline-offset: 2px; border-radius: 4px; }
+.termin-fenster { max-width: min(36rem, calc(100vw - 2rem)); border: 1px solid var(--linie); border-radius: var(--rund); padding: 1.2rem 1.4rem; background: var(--flaeche); color: inherit; cursor: auto; }
+.termin-fenster::backdrop { background: rgb(0 0 0 / .45); }
+.termin-fenster h2 { margin-top: 0; }
+.termin-fenster form { margin-top: 1rem; }
+.abgesagt h3, .abgesagt .klein { text-decoration: line-through; }
+.marke-abgesagt { text-decoration: none; display: inline-block; background: #a4262c; color: #fff; font-size: .75rem; padding: .1rem .5rem; border-radius: 99px; vertical-align: middle; }
+.filter { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin-bottom: 1rem; }
+.abo { margin-top: 2rem; }
+.qr svg { width: 160px; height: 160px; background: #fff; }
+
+/* Kacheln (Züge) */
+.kacheln { list-style: none; padding: 0; display: grid; gap: .6rem; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); grid-auto-rows: 1fr; }
+/* Alle Kacheln gleich hoch, auch wenn ein Name umbricht */
+.kacheln li { display: flex; }
+.kacheln li > a { flex: 1; }
+.kacheln a { display: flex; gap: .8rem; align-items: center; background: var(--flaeche); border: 1px solid var(--linie); border-left: 4px solid var(--farbe-zier); border-radius: var(--rund); padding: .8rem 1rem; text-decoration: none; color: var(--text); font-weight: 600; min-height: 3.5rem; }
+.kacheln a:hover { border-color: var(--primaer); }
+.kacheln img { width: 48px; height: 48px; object-fit: contain; }
+/* Große Kacheln (Züge): Wappen links in festem Platz (auch ohne Wappen), damit alle
+   Namen auf einer Linie beginnen; breitere Kacheln, damit lange Namen höchstens zweizeilig sind (Ralf 31.10.) */
+.kacheln.gross { grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr)); }
+.kacheln.gross a { gap: .8rem; padding: .8rem 1rem; line-height: 1.3; overflow-wrap: break-word; }
+.kacheln.gross img, .kacheln.gross .wappen-platz { width: 60px; height: 60px; flex-shrink: 0; }
+.kacheln.gross img { object-fit: contain; }
+.kacheln small { font-weight: 400; color: var(--text-leise); }
+.einheit-kopf { display: flex; gap: 1.2rem; align-items: center; margin: .8rem 0 1.2rem; }
+.einheit-kopf img { width: 100px; height: 100px; object-fit: contain; flex-shrink: 0; }
+.karte.homepage .klein { overflow-wrap: anywhere; }
+/* Homepage-Karte: Bild füllt den Platz zwischen Überschrift und Knopf, die Karte wird
+   so hoch wie die Ansprechpartner daneben (Ralf 31.10.) */
+.karte.homepage { display: flex; flex-direction: column; }
+.karte.homepage .homepage-bild { flex: 1 1 0; min-height: 72px; display: block; margin: 0 0 1rem; }
+.karte.homepage .homepage-bild img { width: 100%; height: 100%; object-fit: cover; border-radius: var(--rund); display: block; }
+.karte.homepage > p:last-child { margin-top: 0; }
+
+/* Majestäten */
+.wuerde h2 { margin-top: .2em; }
+.majestaet { display: flex; gap: 1rem; align-items: flex-start; flex-wrap: wrap; margin-bottom: .8rem; }
+.majestaet img { width: 11rem; border-radius: var(--rund); }
+.majestaet p { margin: .1rem 0; }
+/* Eigene Seite (Würdenträger, Majestäten, Untereinheit): aktuelles Foto groß, auf der Startseite klein (Ralf 31.10.) */
+.wuerde.voll .majestaet { gap: 1.5rem; margin-bottom: 1.5rem; }
+.wuerde.voll .majestaet img { width: min(28rem, 100%); }
+.wuerde.voll .majestaet .gross { font-size: 1.6rem; }
+.chronik summary { cursor: pointer; font-weight: 600; color: var(--link); padding: .4rem 0; }
+
+/* Formular */
+.formular { display: grid; gap: .35rem; max-width: 36rem; }
+.formular label { font-weight: 600; margin-top: .5rem; }
+.formular input, .formular select, .formular textarea, .filter select {
+  font: inherit; padding: .6rem .7rem; border: 1px solid #767c78; border-radius: 8px; background: #fff; color: var(--text); width: 100%;
+}
+.filter select { width: auto; }
+.formular .empfaenger { margin: .5rem 0 0; }
+.formular .empfaenger-titel { font-weight: 600; display: block; }
+.formular .haken { font-weight: 400; display: flex; gap: .5rem; align-items: center; }
+.formular .haken input { width: auto; }
+.honig { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.meldung { min-height: 1.5em; font-weight: 600; }
+.meldung.fehler { color: #a4262c; }
+.feld-fehler { color: #a4262c; font-weight: 600; font-size: .92rem; margin: 0; }
+.formular [aria-invalid="true"] { border-color: #a4262c; border-width: 2px; }
+
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+@media print { .kopf nav, .fuss, .vorschau-hinweis, .knopf { display: none; } }
+
+/* Social Media: Symbole (Kopf, Menü, Fuß) und große Knöpfe (Start, Züge) */
+.sm-instagram { --sm: #d62976; }
+.sm-facebook { --sm: #0866ff; }
+.sm-tiktok { --sm: #111; }
+.sm-x { --sm: #111; }
+.sm-youtube { --sm: #ff0000; }
+.sozial-symbole { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .4rem; }
+.sozial-symbole a {
+  display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 50%;
+  color: var(--sm, var(--primaer)); background: var(--flaeche); border: 1px solid var(--linie);
+  --sm-auf: var(--flaeche);
+}
+.sozial-symbole a:hover { opacity: 1; background: var(--sm, var(--primaer)); color: #fff; --sm-auf: var(--sm, var(--primaer)); border-color: transparent; }
+.kopf-sozial { display: none; }
+.kopf-sozial .sozial-symbole { flex-wrap: nowrap; }
+.kopf-sozial .sozial-symbole a, .fuss .sozial-symbole a {
+  color: var(--auf-kopf); background: color-mix(in srgb, var(--auf-kopf) 12%, transparent); border-color: transparent; --sm-auf: var(--farbe-kopf);
+}
+.fuss .sozial-symbole a { color: var(--auf-fuss); background: color-mix(in srgb, var(--auf-fuss) 12%, transparent); --sm-auf: var(--farbe-fuss); }
+.kopf-sozial .sozial-symbole a:hover, .fuss .sozial-symbole a:hover { background: #fff; border-color: var(--linie); color: var(--sm, var(--primaer)); --sm-auf: #fff; }
+@media (min-width: 64rem) { .kopf-sozial { display: block; flex: none; } }
+.menue nav .sozial-symbole { padding: .6rem .9rem .3rem; border-top: 1px solid var(--linie); margin-top: .4rem; }
+.menue nav .sozial-symbole a { padding: 0; }
+.sozial-gross { list-style: none; padding: 0; margin: 0; display: grid; gap: .6rem; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); }
+.sozial-gross a {
+  display: flex; align-items: center; gap: .8rem; height: 100%; padding: .8rem 1rem;
+  border-radius: var(--rund); background: var(--sm, var(--primaer)); color: #fff; --sm-auf: var(--sm, var(--primaer));
+  font-weight: 600;
+}
+.sozial-gross .sm-facebook, .sozial-gross .sm-youtube { --sm-auf: var(--sm); }
+.sozial-gross .sm-facebook .sm-symbol, .sozial-gross .sm-youtube .sm-symbol { color: #fff; }
+.sozial-gross a:hover { opacity: .88; }
+.sozial-gross span { display: grid; line-height: 1.25; }
+.sozial-gross small { font-weight: 400; opacity: .9; }
+.sm-symbol { flex: none; }
+.folgen { margin-top: 2rem; }
+/* PC: oben Name und Social Media, darunter das Menü (lange Vereinsnamen brechen nicht um) */
+@media (min-width: 64rem) {
+  .kopf-innen { flex-wrap: wrap; row-gap: 0; }
+  .marke { flex: 1 1 auto; }
+  .menue-breit { order: 3; flex: 1 1 100%; border-top: 1px solid color-mix(in srgb, var(--auf-kopf) 15%, transparent); padding: .3rem 0; }
+  .menue-breit ul { justify-content: flex-start; margin-left: -.55rem; }
+}
+
+/* Dokumente */
+.dokumente { list-style: none; padding: 0; display: grid; gap: .8rem; max-width: 48rem; grid-template-columns: repeat(auto-fill, minmax(min(12rem, 100%), 1fr)); }
+.dokumente a { display: flex; align-items: center; gap: .9rem; background: var(--flaeche); border: 1px solid var(--linie); border-radius: var(--rund); padding: .8rem 1rem; color: var(--text); }
+.dokumente a:hover { border-color: var(--primaer); opacity: 1; }
+.dokumente a.mit-vorschau { flex-direction: column; align-items: stretch; text-align: center; }
+.dok-vorschau { display: block; width: 100%; height: auto; aspect-ratio: 210 / 297; object-fit: cover; object-position: top; background: #fff; border: 1px solid var(--linie); border-radius: 4px; }
+.dok-symbol { flex: none; display: grid; place-items: center; width: 2.6rem; height: 2.6rem; border-radius: 8px; background: var(--primaer); color: var(--auf-primaer); font-size: .75rem; font-weight: 700; }
+
+/* Nur für Screenreader (z. B. Überschrift der Startseite, der Name steht im Kopf) */
+.nur-vorlesen { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* Bilderkarussell der Begrüßung: Band mit Einrasten, Knöpfe nur mit Skript */
+.karussell { margin: 0 0 1rem; }
+.karussell-band { list-style: none; margin: 0; padding: 0; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; border-radius: var(--rund); }
+.karussell-band::-webkit-scrollbar { display: none; }
+.karussell-band:focus-visible { outline: 3px solid var(--link); outline-offset: 3px; }
+.karussell-bild { flex: 0 0 100%; scroll-snap-align: start; }
+.karussell-bild .titelbild { margin: 0; }
+.karussell-bild img { display: block; height: 28rem; max-height: 60vh; }
+.karussell-steuerung { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: .6rem; }
+/* Steuerung steht im Quelltext vor den Bildern (zuerst erreichbar), sichtbar darunter */
+.karussell { display: flex; flex-direction: column; }
+.karussell-steuerung { order: 2; }
+.karussell-steuerung[hidden] { display: none; }
+.knopf-rund { width: 2.4rem; height: 2.4rem; border-radius: 50%; border: 1px solid var(--linie); background: var(--flaeche); color: var(--text); font-size: 1.4rem; line-height: 1; cursor: pointer; }
+.knopf-rund:hover:not(:disabled) { border-color: var(--primaer); }
+.knopf-rund:disabled { opacity: .35; cursor: default; }
+.knopf-pause { font-size: .8rem; letter-spacing: -.1em; }
+.knopf-rund:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; }
+
+/* Aktuelles: Beiträge aus Instagram/Facebook (Bilder von HUBIplan, nichts von Meta) */
+.beitraege { list-style: none; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); }
+.beitrag { margin: 0; display: flex; flex-direction: column; gap: .4rem; }
+.beitrag p { margin: 0; }
+.beitrag-bild { position: relative; margin: -1rem -1.2rem .2rem; }
+.beitrag-bild img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--rund) var(--rund) 0 0; }
+.beitrag-marke { position: absolute; right: .6rem; bottom: .6rem; background: rgba(0, 0, 0, .65); color: #fff; font-size: .8rem; padding: .15rem .5rem; border-radius: 999px; }
+.beitrag-weitere { list-style: none; padding: 0; margin: 0; display: flex; gap: .3rem; }
+.beitrag-weitere img { width: 3.5rem; height: 3.5rem; object-fit: cover; border-radius: 4px; display: block; }
+.beitrag-text { overflow-wrap: anywhere; }
+.beitrag-mehr summary { cursor: pointer; color: var(--link); font-weight: 600; }
+.auswahl a[aria-current="page"] { font-weight: 700; }

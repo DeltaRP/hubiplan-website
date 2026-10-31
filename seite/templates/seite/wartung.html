@@ -1,0 +1,9 @@
+{% extends "seite/basis.html" %}{% load seite %}
+{% block titel %}Wartung · {% endblock %}
+{% block inhalt %}
+<section class="hinweis-seite">
+  <h1>Hier entsteht gerade etwas</h1>
+  {% if site.info.maintenance_text %}<div class="text">{{ site.info.maintenance_text|md:site }}</div>
+  {% else %}<p>Die Webseite wird gerade vorbereitet oder überarbeitet. Bitte schauen Sie bald wieder vorbei.</p>{% endif %}
+</section>
+{% endblock %}

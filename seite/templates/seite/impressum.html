@@ -1,0 +1,31 @@
+{% extends "seite/basis.html" %}{% load seite %}
+{% block titel %}Impressum · {% endblock %}
+{% block inhalt %}
+<h1>Impressum</h1>
+{% if stand %}<p class="klein" role="status">Gespeicherte Fassung, Stand {{ stand|date:"j. F Y, H:i" }} Uhr. Die Seite ist gerade nicht vollständig erreichbar.</p>{% endif %}
+{% with d=imprint.details %}
+{% if imprint.mode == "link" and imprint.external_url %}
+<p>Das Impressum steht hier: <a href="{{ imprint.external_url }}" rel="noopener noreferrer">{{ imprint.external_url }}</a></p>
+{% elif d %}
+<section class="text">
+  {% if imprint.inherited %}<p class="klein">Diese Seite wird verantwortet von:</p>{% endif %}
+  <p><strong>{{ d.name }}</strong>{% if d.legal_form and d.legal_form not in d.name %}<br>{{ d.legal_form }}{% endif %}<br>
+  {{ d.address.street }}<br>{{ d.address.postal_code }} {{ d.address.city }}</p>
+  {% if d.representatives or d.representatives_text %}
+  <h2>Vertreten durch</h2>
+  {% if d.representatives_text %}<p>{{ d.representatives_text|linebreaksbr }}</p>{% else %}
+  <ul>{% for r in d.representatives %}<li>{{ r.name }} ({{ r.role }})</li>{% endfor %}</ul>{% endif %}
+  {% endif %}
+  <h2>Kontakt</h2>
+  <p>{% if d.email %}E-Mail: <a href="mailto:{{ d.email }}">{{ d.email }}</a>{% endif %}{% if d.phone %}<br>Telefon: {% with ziel=d.phone|tel %}{% if ziel %}<a href="tel:{{ ziel }}">{{ d.phone }}</a>{% else %}{{ d.phone }}{% endif %}{% endwith %}{% endif %}</p>
+  {% if d.register_number %}<h2>Registereintrag</h2><p>{% if d.register_court %}Registergericht: {{ d.register_court }}<br>{% endif %}Registernummer: {{ d.register_number }}</p>{% endif %}
+  {% if d.vat_id %}<p>Umsatzsteuer-Identifikationsnummer: {{ d.vat_id }}</p>{% endif %}
+  {% if d.responsible %}<h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2><p>{{ d.responsible|linebreaksbr }}</p>{% endif %}
+  {% if d.data_protection_officer %}<h2>Datenschutzbeauftragte Person</h2><p>{{ d.data_protection_officer|linebreaksbr }}</p>{% endif %}
+  {% if d.extra_text %}<p>{{ d.extra_text|linebreaksbr }}</p>{% endif %}
+</section>
+{% else %}
+<p>Für diese Seite ist noch kein Impressum hinterlegt.</p>
+{% endif %}
+{% endwith %}
+{% endblock %}

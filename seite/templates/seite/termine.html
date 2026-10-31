@@ -1,0 +1,32 @@
+{% extends "seite/basis.html" %}{% load seite %}
+{% block titel %}Termine · {% endblock %}
+{% block inhalt %}
+<h1>Termine</h1>
+{% if units %}
+<form class="filter" method="get" action="{% url 'termine' %}">
+  <label for="einheit">Termine für</label>
+  <select id="einheit" name="einheit">
+    <option value="">alle</option>
+    {% for u in units %}<option value="{{ u.slug }}"{% if u.slug == unit %} selected{% endif %}>{{ u.name }}</option>{% endfor %}
+  </select>
+  <button class="knopf" type="submit">Anzeigen</button>
+</form>
+{% endif %}
+{% for monat, liste in months %}
+<section>
+  <h2>{{ monat }}</h2>
+  <ul class="termine">{% for e in liste %}{% include "seite/termin.html" with voll=True %}{% endfor %}</ul>
+</section>
+{% empty %}
+<p>Zurzeit stehen keine Termine an.</p>
+{% endfor %}
+{% if ics_url %}
+<section class="abo karte">
+  <h2>Termine im eigenen Kalender</h2>
+  <p>Mit dem Kalender-Abo erscheinen alle Termine automatisch in Ihrem Kalender (Handy, Outlook, Google, Apple) und bleiben aktuell.</p>
+  <p><a class="knopf" href="{{ webcal_url }}">Kalender abonnieren</a></p>
+  <p class="klein">Oder diese Adresse im Kalender als Abo hinzufügen:<br><code>{{ ics_url }}</code></p>
+  <div class="qr" aria-label="QR-Code für das Kalender-Abo">{{ qr }}</div>
+</section>
+{% endif %}
+{% endblock %}

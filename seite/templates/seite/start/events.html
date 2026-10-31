@@ -1,0 +1,7 @@
+{% if events %}
+<section>
+  <h2>Nächste Termine</h2>
+  <ul class="termine">{% for e in events %}{% include "seite/termin.html" %}{% endfor %}</ul>
+  <p><a class="knopf" href="{% url 'termine' %}">Alle Termine</a></p>
+</section>
+{% endif %}

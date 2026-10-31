@@ -1,0 +1,7 @@
+{% if facebook_posts %}
+<section>
+  <h2>Neu auf Facebook</h2>
+  {% include "seite/beitraege.html" with beitraege=facebook_posts %}
+  <p><a class="knopf" href="{% url 'aktuelles' %}?kanal=facebook">Alle Beiträge</a></p>
+</section>
+{% endif %}

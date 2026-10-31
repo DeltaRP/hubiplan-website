@@ -1,0 +1,13 @@
+{% extends "seite/basis.html" %}{% load seite %}
+{% block titel %}{{ site.info.unit_label_plural|default:"Einheiten" }} · {% endblock %}
+{% block inhalt %}
+<h1>{{ site.info.unit_label_plural|default:"Einheiten" }}</h1>
+<ul class="kacheln gross">
+{% for u in units %}
+  <li><a href="{% einheit_url site u.slug %}">
+    {% lokal site u.logo_url as logo %}{% if logo %}<img src="{{ logo }}" alt="" width="60" height="60" loading="lazy">{% else %}<span class="wappen-platz" aria-hidden="true"></span>{% endif %}
+    <span>{{ u.name }}{% if u.founding_year %}<br><small>gegründet {{ u.founding_year }}</small>{% endif %}</span>
+  </a></li>
+{% endfor %}
+</ul>
+{% endblock %}

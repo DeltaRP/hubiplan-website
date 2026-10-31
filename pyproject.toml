@@ -1,0 +1,23 @@
+[project]
+name = "hubiplan-website"
+version = "0.1.0"
+description = "Öffentliche Vereinswebseiten mit Daten aus HUBIplan"
+license = "AGPL-3.0-or-later"
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "DJ", "S", "BLE"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "S105", "S106"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-p tests.umgebung"
+filterwarnings = ["ignore:No directory at:UserWarning"]

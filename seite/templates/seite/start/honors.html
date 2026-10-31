@@ -1,0 +1,7 @@
+{% if honors %}
+<section>
+  <h2>Unsere Majestäten</h2>
+  <div class="karten">{% for d in honors %}<div class="karte">{% include "seite/wuerde.html" %}</div>{% endfor %}</div>
+  <p><a class="knopf" href="{% url 'majestaeten' %}">Alle {{ site.info.honors_label|default:"Majestäten" }}</a></p>
+</section>
+{% endif %}

@@ -1,0 +1,3 @@
+{% load seite %}{% if kanaele %}<ul class="sozial-{{ stil|default:'symbole' }}"{% if titel %} aria-label="{{ titel }}"{% endif %}>
+{% for s in kanaele %}<li><a class="sm sm-{{ s.kind }}" href="{{ s.url }}" rel="noopener noreferrer" target="_blank"{% if stil != "gross" %} title="{{ s.label }}" aria-label="{{ s.label }}{% if s.display %}: {{ s.display }}{% endif %} (öffnet in neuem Fenster)"{% endif %}>{% if stil == "gross" %}{% sm_symbol s.kind 28 %}<span><strong>{{ s.label }}</strong>{% if s.display %}<small>{{ s.display }}</small>{% endif %}<span class="nur-vorlesen"> (öffnet in neuem Fenster)</span></span>{% else %}{% sm_symbol s.kind 20 %}{% endif %}</a></li>{% endfor %}
+</ul>{% endif %}

@@ -1,0 +1,10 @@
+{% load seite %}{% with begleitung=d.reigns|mit_begleitung %}
+<table class="zeitliste">
+  <thead><tr><th scope="col">Jahr</th><th scope="col">{{ d.name }}</th>{% if begleitung %}<th scope="col">Begleitung</th>{% endif %}</tr></thead>
+  <tbody>
+  {% for r in d.reigns %}
+    <tr><td>{{ r.period|default:r.year }}</td><td>{{ r.holder.name }}{% if r.times > 1 %} ({{ r.times }}.){% endif %}</td>{% if begleitung %}<td>{% for c in r.companions %}{{ c.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>{% endif %}</tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endwith %}

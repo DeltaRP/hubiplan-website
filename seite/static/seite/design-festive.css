@@ -1,0 +1,29 @@
+/* Design „Festlich“: Wappen groß und mittig, Menüleiste mit Zierlinien, Überschriften mit Serifen */
+body { overflow-x: clip; }
+:root { --schrift-titel: Georgia, Cambria, "Times New Roman", serif; }
+.kopf-innen { flex-direction: column; align-items: center; text-align: center; padding-top: 1rem; }
+.marke { flex-direction: column; gap: .4rem; font-family: var(--schrift-titel); font-size: 1.2rem; text-align: center; }
+.marke img { width: 72px; height: 72px; }
+.menue { position: absolute; left: 16px; top: 1rem; }
+.menue nav { left: 0; right: auto; }
+@media (min-width: 64rem) {
+  .kopf-innen { flex-wrap: nowrap; padding-top: 1.4rem; }
+  .marke { flex: none; font-size: 1.6rem; }
+  .marke img { width: 100px; height: 100px; }
+  .kopf-sozial { position: absolute; right: 16px; top: 1rem; }
+  .menue-breit { flex: none; width: 100vw; margin-top: .6rem; border-top: 2px solid var(--farbe-zier); border-bottom: 2px solid var(--farbe-zier); padding: .15rem 0; }
+  .menue-breit ul { justify-content: center; margin: 0; flex-wrap: wrap; }
+  .menue-breit a { letter-spacing: .03em; font-size: 1rem; }
+}
+main > section > h2, main > h1 { text-align: center; }
+main > section > h2::after, main > h1::after {
+  content: ""; display: block; width: 4rem; height: 3px; margin: .5rem auto 0;
+  background: var(--farbe-zier); border-radius: 2px;
+}
+.begruessung { text-align: center; }
+.begruessung .text { margin: 0 auto; }
+.karte, .termin, .kacheln a { border-radius: 4px; }
+.termin-datum { border-radius: 3px; }
+.kacheln a { border-left-width: 1px; border-top: 3px solid var(--farbe-zier); justify-content: center; text-align: center; font-family: var(--schrift-titel); }
+.karussell-band, .titelbild img { border-radius: 4px; }
+.fuss-innen { justify-content: center; text-align: center; }

@@ -1,0 +1,427 @@
+"""Eine erfundene HUBIplan-Schnittstelle für die Tests (alle Daten erfunden)."""
+
+from __future__ import annotations
+
+import json
+from dataclasses import dataclass, field
+
+from seite import api
+
+KEY = "testschluessel123"
+BASE = f"https://hubiplan.example{api.PREFIX}{KEY}/"
+PNG = (
+    b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x06\x00\x00\x00"
+    b"\x1f\x15\xc4\x89\x00\x00\x00\rIDATx\x9cc\xf8\x0f\x00\x00\x01\x01\x00\x05\x18\xd8N\x00"
+    b"\x00\x00\x00IEND\xaeB`\x82"
+)
+
+
+def site_info(**over) -> dict:
+    data = {
+        "version": 1,
+        "state": "public",
+        "preview": False,
+        "name": "Schützenverein Musterdorf 1900",
+        "short_name": "SV Musterdorf",
+        "logo_url": "https://hubiplan.example/media/logos/wappen.png",
+        "theme": {
+            "primary": "#123456",
+            "on_primary": "#ffffff",
+            "accent": "#abcdef",
+            "on_accent": "#000000",
+        },
+        "imprint_url": BASE + "imprint/",
+        "allow_indexing": True,
+        "hubiplan_imprint": {},
+        "founding_year": 1900,
+        "unit_label": "Zug",
+        "unit_label_plural": "Züge",
+        "address": {"street": "Dorfstraße 1", "postal_code": "12345", "city": "Musterdorf"},
+        "email": "info@musterdorf.example",
+        "phone": None,
+        "member_of": {"name": "Bürgerverein Musterdorf", "website": None},
+        "blocks": {
+            "events": True,
+            "board": True,
+            "honors": True,
+            "history": True,
+            "contact": True,
+            "units": True,
+            "social": True,
+        },
+        "menu": [
+            {"slug": "geschichte", "title": "Geschichte"},
+            {"slug": "anfahrt", "title": "Anfahrt"},
+        ],
+        "greeting": {
+            "title": "Willkommen",
+            "text": "Hallo **Welt**! <script>alert(1)</script>\n\n![Fest](bild:festbild1)",
+            "image": None,
+        },
+        "social": [
+            {
+                "kind": "instagram",
+                "label": "Instagram",
+                "url": "https://instagram.example/sv",
+                "display": "@sv",
+            },
+            {
+                "kind": "facebook",
+                "label": "Facebook",
+                "url": "https://facebook.example/sv",
+                "display": "",
+            },
+            {
+                "kind": "tiktok",
+                "label": "TikTok",
+                "url": "https://tiktok.example/@sv",
+                "display": "@sv",
+            },
+            {"kind": "x", "label": "X", "url": "https://x.example/sv", "display": "@sv"},
+        ],
+        "units": [
+            {
+                "slug": "jaeger",
+                "name": "Jägerzug",
+                "short_name": "",
+                "founding_year": 1950,
+                "parent": None,
+                "logo_url": None,
+                "image": None,
+            },
+        ],
+        "statute_url": None,
+        "fee_rules_url": None,
+        "founding_deed_url": None,
+        "calendar": {"json_url": BASE + "events/", "ics_url": BASE + "events.ics"},
+    }
+    data.update(over)
+    return data
+
+
+BOARD = {
+    "roles": [
+        {
+            "id": "r1" * 10,
+            "name": "1. Vorsitzender",
+            "holders": [
+                {
+                    "name": "Max Muster",
+                    "photo_url": BASE + "photos/" + "a" * 20 + "/",
+                    "email": "max@musterdorf.example",
+                }
+            ],
+            "vacant": False,
+            "email": None,
+            "contact_form": True,
+        },
+        {
+            "id": "r2" * 10,
+            "name": "Kassierer",
+            "holders": [],
+            "vacant": True,
+            "email": None,
+            "contact_form": False,
+        },
+    ],
+    "honorary": [
+        {
+            "title": "Ehrenmitglied",
+            "holders": [{"name": "Erika Beispiel", "photo_url": None, "since": "2010-05-01"}],
+        }
+    ],
+    "chronicle": [
+        {
+            "role": "1. Vorsitzender",
+            "holders": [
+                {
+                    "name": "Alt Vorsitz",
+                    "photo_url": None,
+                    "from": "2000-01-01",
+                    "until": "2019-12-31",
+                    "current": False,
+                },
+                {
+                    "name": "Max Muster",
+                    "photo_url": None,
+                    "from": "2020-01-01",
+                    "until": None,
+                    "current": True,
+                },
+            ],
+        },
+    ],
+}
+
+HONORS = {
+    "dignities": [
+        {
+            "id": "d" * 20,
+            "name": "König",
+            "name_plural": "Könige",
+            "current": [
+                {
+                    "year": 2026,
+                    "from": None,
+                    "until": None,
+                    "period": "2026",
+                    "holder": {"name": "Karl Krone", "photo_url": None},
+                    "companions": [{"label": "Königin", "name": "Klara Krone", "photo_url": None}],
+                    "note": "",
+                    "photo_url": None,
+                    "times": 2,
+                }
+            ],
+            "reigns": [
+                {
+                    "year": 2026,
+                    "period": "2026",
+                    "holder": {"name": "Karl Krone"},
+                    "companions": [],
+                    "note": "",
+                    "photo_url": None,
+                    "times": 2,
+                },
+                {
+                    "year": 2025,
+                    "period": "2025",
+                    "holder": {"name": "Otto Ober"},
+                    "companions": [],
+                    "note": "",
+                    "photo_url": None,
+                    "times": 1,
+                },
+            ],
+        }
+    ]
+}
+
+
+def events(future: str = "2099-06-01T18:00:00+02:00") -> dict:
+    return {
+        "ics_url": BASE + "events.ics",
+        "events": [
+            {
+                "id": "e1",
+                "title": "Schützenfest",
+                "starts_at": future,
+                "ends_at": "2099-06-01T23:00:00+02:00",
+                "all_day": False,
+                "location": "Festzelt",
+                "address": "",
+                "description": "Mit Musik",
+                "category": None,
+                "color": None,
+                "unit": None,
+                "owner": "Bürgerverein Musterdorf",
+                "is_cancelled": False,
+                "note": "",
+            },
+            {
+                "id": "e0",
+                "title": "Alter Termin",
+                "starts_at": "2000-01-01T10:00:00+01:00",
+                "ends_at": None,
+                "all_day": False,
+                "location": "",
+                "address": "",
+                "description": "",
+                "category": None,
+                "color": None,
+                "unit": None,
+                "is_cancelled": False,
+                "note": "",
+            },
+        ],
+    }
+
+
+def _post(n: int, kind: str, text: str, images: int = 1, video: bool = False) -> dict:
+    return {
+        "id": f"beitrag{n}",
+        "kind": kind,
+        "kind_label": "Instagram" if kind == "instagram" else "Facebook",
+        "account": "musterdorf",
+        "media_type": "video" if video else ("album" if images > 1 else "image"),
+        "text": text,
+        "published_at": f"2026-10-{20 - n:02d}T10:00:00+00:00",
+        "permalink": f"https://www.instagram.com/p/beispiel{n}/" if kind == "instagram" else None,
+        "images": [
+            {
+                "url": f"{BASE}posts/images/bild{n}x{i}/",
+                "small_url": f"{BASE}posts/images/bild{n}x{i}/?size=small",
+                "width": 1200,
+                "height": 900,
+                "alt": "Erfundenes Bild",
+                "is_video": video,
+            }
+            for i in range(images)
+        ],
+    }
+
+
+POSTS = [
+    _post(1, "instagram", "Schönes Fest!\nDanke an alle <b>Helfer</b>.", images=3),
+    _post(2, "instagram", "Probe für den Umzug.", video=True),
+    _post(3, "facebook", "Einladung zur Versammlung.", images=0),
+]
+
+
+@dataclass
+class FakeHubiplan:
+    info: dict = field(default_factory=site_info)
+    maintenance: bool = False
+    preview_session: str = "sitzung-1234567890"
+    calls: list = field(default_factory=list)
+    posts: list = field(default_factory=list)
+    bases: list = field(default_factory=list)
+    hosts: dict = field(default_factory=lambda: {"testserver": KEY, "www.musterdorf.test": KEY})
+
+    def __call__(self, method, path, *, data=None, preview=None, base=None):
+        self.calls.append((method, path, preview))
+        self.bases.append(base)
+        ok_preview = preview == self.preview_session
+        prefix = f"{api.PREFIX}{KEY}/"
+        if path.startswith(f"{api.PREFIX}resolve/"):
+            host = path.split("host=")[1]
+            if host in self.hosts:
+                return self.json({"key": self.hosts[host], "version": 1})
+            return self.json({"detail": "nicht gefunden"}, 404)
+        if path.startswith("/media/"):
+            return api.Response(200, PNG, "image/png")
+        if not path.startswith(prefix):
+            return self.json({}, 404)
+        rest = path[len(prefix) :]
+        if method == "POST":
+            self.posts.append((rest, data))
+            if rest == "preview/":
+                if data.get("token") == "gut":
+                    return self.json(
+                        {"session": self.preview_session, "until": "2099-01-01T00:00:00Z"}
+                    )
+                return self.json({"detail": "ungültig"}, 403)
+            return self.json({}, 405)
+        hidden = self.maintenance and not ok_preview
+        if rest == "":
+            if hidden:
+                return self.json(
+                    {
+                        **{
+                            k: self.info[k] for k in ("name", "theme", "logo_url", "allow_indexing")
+                        },
+                        "state": "maintenance",
+                        "preview": False,
+                        "maintenance_text": "Bald geht es los.",
+                    },
+                    503,
+                )
+            return self.json(
+                {
+                    **self.info,
+                    "preview": ok_preview,
+                    "state": "maintenance" if self.maintenance else "public",
+                }
+            )
+        if rest == "imprint/":
+            return self.json(
+                {
+                    "unit": self.info["name"],
+                    "owner": self.info["name"],
+                    "inherited": False,
+                    "mode": "own",
+                    "external_url": "",
+                    "details": {
+                        "name": self.info["name"],
+                        "legal_form": "",
+                        "address": {
+                            "street": "Dorfstraße 1",
+                            "postal_code": "12345",
+                            "city": "Musterdorf",
+                            "country": "DE",
+                        },
+                        "representatives": [{"name": "Max Muster", "role": "1. Vorsitzender"}],
+                        "representatives_text": "",
+                        "email": "info@musterdorf.example",
+                        "phone": "",
+                        "website": "",
+                        "register_court": "Amtsgericht Musterstadt",
+                        "register_number": "VR 1234",
+                        "vat_id": "",
+                        "responsible": "Max Muster",
+                        "data_protection_officer": "",
+                        "extra_text": "",
+                    },
+                    "privacy": {
+                        "mode": "text",
+                        "text": "## Datenschutz\n\nWir speichern wenig.",
+                        "url": "",
+                        "generated_at": "2026-10-01T10:00:00Z",
+                    },
+                }
+            )
+        if hidden:
+            return self.json({"detail": "Wartung"}, 503)
+        if (
+            rest.startswith("images/")
+            or rest.startswith("photos/")
+            or rest.startswith("honors/photos/")
+            or rest.startswith("statute/preview/")
+            or rest.startswith("fee-rules/preview/")
+            or rest.startswith("founding-deed/preview/")
+            or rest.startswith("posts/images/")
+        ):
+            return api.Response(200, PNG, "image/png")
+        table = {
+            "board/": BOARD,
+            "honors/": HONORS,
+            "units/jaeger/": {
+                **self.info["units"][0],
+                "title": "Jägerzug",
+                "text": "Wir sind *der* Jägerzug.",
+                "roles": [],
+                "social": [],
+                "honors": HONORS["dignities"],
+                "events_url": None,
+                "posts": self.info.get("unit_posts", {"instagram": False, "facebook": False}),
+            },
+            "pages/geschichte/": {
+                "slug": "geschichte",
+                "title": "Chronik",
+                "text": "Seit 1900.",
+                "image": None,
+            },
+            "pages/anfahrt/": {
+                "slug": "anfahrt",
+                "title": "Anfahrt",
+                "text": "Mit dem Bus.",
+                "image": None,
+            },
+            "contact/": {
+                "recipients": [
+                    {"id": "allgemein", "name": "Verein (allgemein)"},
+                    {"id": "r1" * 10, "name": "1. Vorsitzender"},
+                ],
+                "challenge": {
+                    "token": "tok",
+                    "salt": "salz",
+                    "difficulty": 16,
+                    "algorithm": "SHA-256",
+                },
+            },
+        }
+        base = rest.split("?")[0]
+        if base == "posts/":
+            if not self.info.get("blocks", {}).get("posts"):
+                return self.json({"detail": "nicht gefunden"}, 404)
+            query = rest.split("?", 1)[1] if "?" in rest else ""
+            items = [p for p in POSTS if f"art={p['kind']}" in query or "art=" not in query]
+            return self.json({"posts": items})
+        if base == "events/":
+            return self.json(events())
+        if base in table:
+            return self.json(table[base])
+        return self.json({"detail": "nicht gefunden"}, 404)
+
+    @staticmethod
+    def json(data, status=200):
+        return api.Response(status, json.dumps(data).encode(), "application/json")

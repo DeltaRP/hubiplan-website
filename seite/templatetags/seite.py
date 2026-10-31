@@ -1,0 +1,298 @@
+"""Hilfen für die Vorlagen: Markdown, lokale Bildadressen, Menü."""
+
+from __future__ import annotations
+
+import datetime
+import functools
+import re
+from pathlib import Path
+
+from django import template
+from django.urls import reverse
+
+from .. import markdown
+
+register = template.Library()
+
+
+@register.filter
+def md(text, site=None):
+    """Markdown → HTML; mit ``site`` führen Links auf Untereinheiten zum richtigen Pfad."""
+    return markdown.render(text, site.units_path if site is not None else "einheiten")
+
+
+@register.simple_tag
+def lokal(site, url):
+    return site.local(url) if site is not None else None
+
+
+@register.simple_tag
+def einheiten_url(site):
+    return reverse("einheiten", kwargs={"pfad": site.units_path})
+
+
+@register.simple_tag
+def einheit_url(site, slug):
+    return reverse("einheit", kwargs={"pfad": site.units_path, "slug": slug})
+
+
+@register.simple_tag(takes_context=True)
+def menue(context):
+    """Menüpunkte je nach eingeschalteten Bereichen."""
+    site = context.get("site")
+    if site is None or site.maintenance and not site.is_preview:
+        return []
+    info = site.info
+    items = [("Start", reverse("start"))]
+    nav = info.get("nav")
+    if isinstance(nav, list):
+        items += _nav_items(site, nav)
+    else:
+        items += _legacy_items(site)
+    path = context["request"].path
+    start = reverse("start")
+
+    def entry(label, url):
+        if isinstance(url, list):
+            children = [entry(*c) for c in url]
+            return {
+                "label": label,
+                "children": children,
+                "active": any(c["active"] for c in children),
+            }
+        return {
+            "label": label,
+            "url": url,
+            "active": path == url or (url != start and path.startswith(url)),
+        }
+
+    return [entry(label, url) for label, url in items]
+
+
+def _nav_url(site, node: dict) -> str | None:
+    """Adresse eines Menüpunkts aus HUBIplan (None: unbekannt oder unvollständig)."""
+    key = node.get("key")
+    if key == "page":
+        return reverse("seite", args=[node["slug"]]) if node.get("slug") else None
+    if key == "dignity":
+        return reverse("wuerde", args=[node["id"]]) if node.get("id") else None
+    if key == "units":
+        return einheiten_url(site)
+    name = NAV_URLS.get(key)
+    return reverse(name) if name else None
+
+
+# Menüpunkte aus HUBIplan → Adresse auf der Webseite
+NAV_URLS = {
+    "posts": "aktuelles",
+    "events": "termine",
+    "board": "vorstand",
+    "honors": "majestaeten",
+    "history": "chronik",
+    "offices": "aemter",
+    "honorary": "ehrungen",
+    "statutes": "dokumente",
+    "contact": "kontakt",
+}
+
+
+def _nav_items(site, nav: list) -> list:
+    """Menü in der Anordnung aus HUBIplan (Ralf 2026-10-31: per Ziehen, mit Unterpunkten).
+    Ein Punkt mit eigener Seite und Unterpunkten wird ein Aufklappmenü, in dem er selbst
+    zuerst steht; eine Überschrift hat nur ihre Unterpunkte."""
+    items = []
+    for node in nav:
+        if not isinstance(node, dict) or not node.get("label"):
+            continue
+        children = [
+            (c["label"], url)
+            for c in node.get("children") or []
+            if isinstance(c, dict) and c.get("label") and (url := _nav_url(site, c))
+        ]
+        url = None if node.get("heading") else _nav_url(site, node)
+        if url and children:
+            items.append((node["label"], [(node["label"], url), *children]))
+        elif url:
+            items.append((node["label"], url))
+        elif len(children) == 1:
+            items.append(children[0])
+        elif children:
+            items.append((node["label"], children))
+    return items
+
+
+def _legacy_items(site) -> list:
+    """Menü für ältere HUBIplan-Stände ohne ``nav`` (feste Reihenfolge)."""
+    info = site.info
+    items = []
+    from seite.views import has_posts
+
+    if site.block("posts") and has_posts(info):
+        items.append(("Aktuelles", reverse("aktuelles")))
+    if site.block("events"):
+        items.append(("Termine", reverse("termine")))
+    if site.block("board"):
+        items.append(("Vorstand", reverse("vorstand")))
+    if info.get("units"):
+        items.append((info.get("unit_label_plural") or "Einheiten", einheiten_url(site)))
+    grouped = info.get("honors_menu")
+    if grouped:
+        # Menüpunkt „Würdenträger“ mit Unterpunkten je Würde und „Ehrungen“ (Ralf 2026-10-31)
+        children = [
+            (d["label"], reverse("wuerde", args=[d["id"]]))
+            for d in grouped.get("dignities") or []
+            if d.get("id") and d.get("label")
+        ]
+        if grouped.get("honorary"):
+            children.append((grouped.get("honorary_label") or "Ehrungen", reverse("ehrungen")))
+        if len(children) == 1:
+            items.append(children[0])
+        elif children:
+            items.append((grouped.get("label") or "Würdenträger", children))
+    elif site.block("honors"):
+        # Bei nur einer Würde ihr Name (in der Mehrzahl), sonst „Majestäten“
+        items.append((info.get("honors_label") or "Majestäten", reverse("majestaeten")))
+    pages = info.get("menu") or []
+    # Menü „Geschichte“ mit „Chronik“ und „Ämter“ (Ralf 2026-10-31); nur eins: direkt
+    chronik, aemter = site.history_parts()
+    parts = [("Chronik", reverse("chronik"))] if chronik else []
+    if aemter:
+        parts.append(("Ämter", reverse("aemter")))
+    if len(parts) == 1:
+        items.append(parts[0])
+    elif parts:
+        items.append(("Geschichte", parts))
+    for p in pages:
+        if p.get("slug") and p["slug"] != "geschichte":
+            items.append((p.get("title") or p["slug"], reverse("seite", args=[p["slug"]])))
+    if info.get("statute_url") or info.get("fee_rules_url") or info.get("founding_deed_url"):
+        items.append(("Dokumente", reverse("dokumente")))
+    if site.block("contact"):
+        items.append(("Kontakt", reverse("kontakt")))
+    return items
+
+
+@register.simple_tag
+def jahr():
+    return datetime.date.today().year
+
+
+QUELLCODE = "https://github.com/DeltaRP/hubiplan-website"
+FASSUNG = Path(__file__).resolve().parents[2] / ".fassung"
+
+
+@functools.cache
+def _fassung() -> str:
+    """Commit der laufenden Fassung (deploy/deploy.sh legt ``.fassung`` ab), sonst leer."""
+    try:
+        sha = FASSUNG.read_text().strip()
+    except OSError:
+        return ""
+    return sha if re.fullmatch(r"[0-9a-f]{40}", sha) else ""
+
+
+@register.simple_tag
+def quellcode():
+    """Quellcode dieser Webseite (AGPL § 13): der laufende Commit, sonst das Repository."""
+    sha = _fassung()
+    return f"{QUELLCODE}/tree/{sha}" if sha else QUELLCODE
+
+
+@register.filter
+def mit_begleitung(reigns) -> bool:
+    """Hat mindestens eine Regentschaft Begleitpersonen? Sonst entfällt die Spalte."""
+    return any(r.get("companions") for r in reigns or [])
+
+
+@register.filter
+def datum(value):
+    """ISO-Datum (Text) → 1.4.2020."""
+    if not value:
+        return ""
+    if isinstance(value, str):
+        try:
+            value = datetime.date.fromisoformat(value[:10])
+        except ValueError:
+            return value
+    return f"{value.day}.{value.month}.{value.year}"
+
+
+@register.filter
+def nur_jahr(value):
+    """ISO-Datum (Text) → Jahr. Ämter und Vorstand zeigen nur Jahre (Ralf 2026-10-31)."""
+    if not value:
+        return ""
+    if isinstance(value, str):
+        return value[:4] if value[:4].isdigit() else value
+    return str(value.year)
+
+
+# Symbole für Social-Media-Kanäle (schlichte Formen; Farbe über CSS). Die Pfade für
+# Facebook, TikTok und X entsprechen weitgehend den Symbolen von Simple Icons
+# (simpleicons.org, CC0 1.0; X verglichen mit Version 11.15.0); ob sie von dort
+# stammen, ist nicht belegt (Lizenzaudit 31.10.2026, L11). CC0 verlangt keine Nennung.
+# Die Zeichen sind Marken der jeweiligen Unternehmen und dienen nur als Link auf
+# den eigenen Kanal des Vereins.
+_STROKE = 'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"'
+ICONS = {
+    "facebook": '<circle cx="12" cy="12" r="12" fill="currentColor"/>'
+    '<path fill="var(--sm-auf, #fff)" '
+    'd="M13.4 24v-8.4h2.8l.4-3.3h-3.2v-2.1c0-1 .3-1.6 1.6-1.6h1.7V5.7c-.3 0-1.3-.1-2.5-.1-2.5 '
+    '0-4.2 1.5-4.2 4.3v2.4H7.2v3.3H10V24z"/>',
+    "instagram": f'<rect x="3" y="3" width="18" height="18" rx="5" {_STROKE}/>'
+    f'<circle cx="12" cy="12" r="4.2" {_STROKE}/><circle cx="17.4" cy="6.6" r="1.2" '
+    'fill="currentColor"/>',
+    "tiktok": '<path fill="currentColor" d="M12.5 0h3.9c.1 1.5.6 3.1 1.8 4.2 1.1 1.1 2.7 1.6 '
+    "4.2 1.8v4c-1.4 0-2.9-.3-4.2-1-.6-.3-1.1-.6-1.6-.9v8.8c-.1 1.4-.5 2.8-1.4 3.9a7 7 0 0 1-5.9 "
+    "3.2A7 7 0 0 1 2.4 19a7 7 0 0 1 2-11.7 7 7 0 0 1 4.1-.4v4.4c-1-.3-2.2-.2-3 .4a2.9 2.9 0 0 "
+    '0 1.9 5.2 2.9 2.9 0 0 0 2.8-2.7V0h2.3z"/>',
+    "x": '<path fill="currentColor" d="M18.9 1.2h3.7l-8 9.1L24 22.8h-7.4l-5.8-7.6-6.6 '
+    '7.6H.5l8.6-9.8L0 1.2h7.6l5.2 6.9 6.1-6.9zm-1.3 19.5h2L6.5 3.2H4.3l13.3 17.5z"/>',
+    "youtube": '<rect x="1.5" y="4.5" width="21" height="15" rx="4" fill="currentColor"/>'
+    '<path d="M10 8.8v6.4l5.5-3.2z" fill="var(--sm-auf, #fff)"/>',
+}
+_LINK = (
+    f'<circle cx="12" cy="12" r="9" {_STROKE}/><path {_STROKE} d="M3 12h18M12 3c2.5 2.7 '
+    '3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/>'
+)
+
+
+@register.simple_tag
+def sm_symbol(kind: str, size: int = 22):
+    from django.utils.safestring import mark_safe
+
+    body = ICONS.get(kind or "", _LINK)
+    return mark_safe(  # noqa: S308 - feste Symbole aus diesem Modul
+        f'<svg class="sm-symbol" viewBox="0 0 24 24" width="{int(size)}" height="{int(size)}" '
+        f'aria-hidden="true" focusable="false">{body}</svg>'
+    )
+
+
+@register.filter
+def web_ziel(url: str) -> str:
+    """Nur http(s)-Adressen als Linkziel; alles andere wird leer (kein javascript: o. Ä.)."""
+    url = (url or "").strip()
+    return url if url.lower().startswith(("https://", "http://")) else ""
+
+
+@register.filter
+def web_anzeige(url: str) -> str:
+    """Adresse zum Lesen: ohne https:// und ohne Schrägstrich am Ende."""
+    text = (url or "").strip().split("://", 1)[-1]
+    return text.rstrip("/")
+
+
+@register.filter
+def tel(number: str) -> str:
+    """Telefonnummer als tel:-Ziel (UX-Audit 31.10. S07): nur Ziffern und führendes +,
+    „0049…“ wird „+49…“, die Klammer-Null in „+49 (0) 2131“ entfällt."""
+    raw = (number or "").strip()
+    raw = re.sub(r"\(0\)", "", raw)
+    digits = re.sub(r"[^\d+]", "", raw)
+    plus = digits.startswith("+")
+    digits = digits.replace("+", "")
+    if not plus and digits.startswith("00"):
+        plus, digits = True, digits[2:]
+    if len(digits) < 3:
+        return ""
+    return ("+" if plus else "") + digits

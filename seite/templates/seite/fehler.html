@@ -1,0 +1,9 @@
+{% extends "seite/basis.html" %}
+{% block titel %}{{ title }} · {% endblock %}
+{% block inhalt %}
+<section class="hinweis-seite">
+  <h1>{{ title }}</h1>
+  {% if text %}<p>{{ text }}</p>{% endif %}
+  <p><a class="knopf" href="{% url 'start' %}">Zur Startseite</a></p>
+</section>
+{% endblock %}

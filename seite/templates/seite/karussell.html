@@ -1,0 +1,15 @@
+{% load seite %}<div class="karussell" data-karussell role="region" aria-roledescription="Karussell" aria-label="Bilder">
+  <div class="karussell-steuerung" hidden>
+    <button type="button" class="knopf-rund knopf-pause" data-pause aria-label="Anhalten" aria-pressed="false">❚❚</button>
+    <button type="button" class="knopf-rund" data-zurueck aria-label="Vorheriges Bild">‹</button>
+    <span class="karussell-zaehler klein" aria-live="polite">1 / {{ bilder|length }}</span>
+    <button type="button" class="knopf-rund" data-weiter aria-label="Nächstes Bild">›</button>
+  </div>
+  <ul class="karussell-band" tabindex="0">
+  {% for b in bilder %}{% lokal site b.url as bild %}
+    <li class="karussell-bild" aria-roledescription="Bild" aria-label="{{ forloop.counter }} von {{ bilder|length }}">
+      <figure class="titelbild"><img src="{{ bild }}" alt="{{ b.alt }}"{% if b.width %} width="{{ b.width }}" height="{{ b.height }}"{% endif %}{% if not forloop.first %} loading="lazy"{% endif %}>{% if b.caption %}<figcaption>{{ b.caption }}</figcaption>{% endif %}</figure>
+    </li>
+  {% endfor %}
+  </ul>
+</div>

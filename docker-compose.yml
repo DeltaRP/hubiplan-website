@@ -1,0 +1,27 @@
+# Vereinswebseite auf dem Testserver: hängt sich in das Docker-Netz von HUBIplan
+# (Compose-Projekt „hubiplan“, Netz „web“). Caddy von HUBIplan leitet /webseite/ hierher.
+services:
+  website:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    # Logs begrenzt (3 × 10 MB)
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      web:
+        aliases: [website]
+
+networks:
+  web:
+    name: hubiplan_web
+    external: true

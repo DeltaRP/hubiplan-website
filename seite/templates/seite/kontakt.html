@@ -1,0 +1,39 @@
+{% extends "seite/basis.html" %}{% load static %}
+{% block titel %}Kontakt · {% endblock %}
+{% block inhalt %}
+<h1>Kontakt</h1>
+{% if recipient %}
+<form id="kontakt" class="formular" method="post" action="{{ post_url }}" novalidate
+      data-ziel="{{ post_url }}" data-token="{{ challenge.token }}" data-salz="{{ challenge.salt }}"
+      data-schwierigkeit="{{ challenge.difficulty }}" data-vorschau="{{ preview_session }}"
+      data-neu="{% url 'kontakt_pruefung' %}">
+  <p>Schreiben Sie uns. Die Nachricht geht per E-Mail an {{ recipient.name }}; die Antwort kommt an Ihre E-Mail-Adresse.</p>
+  <p class="klein" id="k-pflicht">Alle Felder sind Pflicht, nur „Kopie an mich senden“ ist freiwillig.</p>
+  {# Fester Empfänger je nach Herkunft, keine Auswahl (Ralf 31.10.) #}
+  <p class="empfaenger"><span class="empfaenger-titel">An</span> <strong id="k-an">{{ recipient.name }}</strong></p>
+  <input type="hidden" name="recipient" value="{{ recipient.id }}">
+  <label for="k-name">Ihr Name</label>
+  <input id="k-name" aria-describedby="k-name-fehler" name="name" required maxlength="100" autocomplete="name">
+  <p class="feld-fehler" id="k-name-fehler" hidden></p>
+  <label for="k-mail">Ihre E-Mail-Adresse</label>
+  <input id="k-mail" aria-describedby="k-mail-fehler" name="email" type="email" required maxlength="200" autocomplete="email">
+  <p class="feld-fehler" id="k-mail-fehler" hidden></p>
+  <label for="k-betreff">Betreff</label>
+  <input id="k-betreff" aria-describedby="k-betreff-fehler" name="subject" required maxlength="150">
+  <p class="feld-fehler" id="k-betreff-fehler" hidden></p>
+  <label for="k-text">Nachricht</label>
+  <textarea id="k-text" aria-describedby="k-text-fehler" name="message" required rows="7" minlength="10" maxlength="5000"></textarea>
+  <p class="feld-fehler" id="k-text-fehler" hidden></p>
+  <div class="honig" aria-hidden="true"><label for="k-hp">Bitte leer lassen</label><input id="k-hp" name="homepage" tabindex="-1" autocomplete="off"></div>
+  <label class="haken"><input type="checkbox" name="copy" value="1"> Kopie an mich senden</label>
+  <p class="klein">Hinweise zur Verarbeitung Ihrer Angaben stehen in den <a href="{% url 'datenschutz' %}">Datenschutzhinweisen</a>.</p>
+  {# Erst aktiv, wenn kontakt.js bereit ist (UX-Audit 31.10. S09) #}
+  <button class="knopf" type="submit" disabled>Nachricht senden</button>
+  <p class="meldung" role="status" aria-live="polite"></p>
+</form>
+<p id="k-ohne-js">Zum Senden braucht das Formular JavaScript (Schutz vor Spam); in diesem Browser ist es gerade nicht verfügbar.{% if site.info.email %} Schreiben Sie uns stattdessen gern per E-Mail an <a href="mailto:{{ site.info.email }}">{{ site.info.email }}</a>.{% else %} Bitte versuchen Sie es mit einem anderen Browser.{% endif %}</p>
+{% else %}
+<p>Das Kontaktformular ist gerade nicht verfügbar.{% if site.info.email %} Schreiben Sie uns gern an <a href="mailto:{{ site.info.email }}">{{ site.info.email }}</a>.{% endif %}</p>
+{% endif %}
+{% endblock %}
+{% block skripte %}<script src="{% static 'seite/kontakt.js' %}" defer></script>{% endblock %}

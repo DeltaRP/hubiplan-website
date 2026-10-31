@@ -1,0 +1,17 @@
+{% extends "seite/basis.html" %}{% load seite %}
+{% block titel %}Ämter · {% endblock %}
+{% block inhalt %}
+<h1>Ämter</h1>
+{# Ein Block je Amt, auf breiten Bildschirmen nebeneinander (Ralf 31.10.) #}
+<div class="karten aemter">
+{% for c in offices %}
+<section class="karte">
+  <h2>{{ c.role }}</h2>
+  <table class="zeitliste">
+    <thead><tr><th scope="col">Zeitraum</th><th scope="col">Name</th></tr></thead>
+    <tbody>{% for h in c.holders %}<tr><td>{% with von=h.from|nur_jahr bis=h.until|nur_jahr %}{% if h.current %}{{ von }} bis heute{% elif not bis or bis == von %}{{ von }}{% else %}{{ von }} bis {{ bis }}{% endif %}{% endwith %}</td><td>{{ h.name }}</td></tr>{% endfor %}</tbody>
+  </table>
+</section>
+{% endfor %}
+</div>
+{% endblock %}

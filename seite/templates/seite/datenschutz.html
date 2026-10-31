@@ -1,0 +1,13 @@
+{% extends "seite/basis.html" %}{% load seite %}
+{% block titel %}Datenschutz · {% endblock %}
+{% block inhalt %}
+<h1>Datenschutzhinweise</h1>
+{% if stand %}<p class="klein" role="status">Gespeicherte Fassung, Stand {{ stand|date:"j. F Y, H:i" }} Uhr. Die Seite ist gerade nicht vollständig erreichbar.</p>{% endif %}
+{% if privacy.mode == "link" and privacy.url %}
+<p>Die Datenschutzhinweise stehen hier: <a href="{{ privacy.url }}" rel="noopener noreferrer">{{ privacy.url }}</a></p>
+{% elif privacy.text %}
+<div class="text">{{ privacy.text|md:site }}</div>
+{% else %}
+<p>Für diese Seite sind noch keine Datenschutzhinweise hinterlegt.</p>
+{% endif %}
+{% endblock %}

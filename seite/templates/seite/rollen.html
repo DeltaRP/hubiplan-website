@@ -1,0 +1,18 @@
+{% load seite %}
+<div class="karten">
+{% for r in rollen %}
+  <section class="karte">
+    <h3>{{ r.name }}</h3>
+    {% if r.vacant %}<p class="klein">Zurzeit nicht besetzt.</p>{% else %}{% include "seite/personen.html" with personen=r.holders %}{% endif %}
+    {% if r.email %}<p><a href="mailto:{{ r.email }}">{{ r.email }}</a></p>{% endif %}
+    {% if r.contact_form %}<p><a class="knopf klein-knopf" href="{% url 'kontakt' %}?an={{ r.id }}">Nachricht schreiben</a></p>{% endif %}
+  </section>
+{% endfor %}
+{% if homepage %}
+  <section class="karte homepage">
+    <h3>Homepage</h3>
+    {% lokal site homepage_bild as bild %}{% if bild %}<a class="homepage-bild" href="{{ homepage }}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true"><img src="{{ bild }}" alt="" loading="lazy"></a>{% else %}<p class="klein">{{ homepage|web_anzeige }}</p>{% endif %}
+    <p><a class="knopf klein-knopf" href="{{ homepage }}" target="_blank" rel="noopener noreferrer">Zur Homepage<span aria-hidden="true"> ↗</span><span class="nur-vorlesen"> (öffnet in neuem Fenster)</span></a></p>
+  </section>
+{% endif %}
+</div>

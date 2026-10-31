@@ -1,0 +1,21 @@
+/* Design „Seitenleiste“: am Bildschirm Menü senkrecht in einer Leiste links; am Handy wie Klassisch */
+@media (min-width: 64rem) {
+  body { padding-left: 17rem; }
+  .kopf { position: fixed; top: 0; left: 0; bottom: 0; width: 17rem; overflow-y: auto; z-index: 4; }
+  .kopf-innen { flex-direction: column; flex-wrap: nowrap; align-items: stretch; min-height: 100%; padding: 1.4rem 1rem; gap: 1rem; }
+  .marke { flex: none; flex-direction: column; text-align: center; font-size: 1rem; padding-bottom: 1rem; border-bottom: 1px solid color-mix(in srgb, var(--auf-kopf) 20%, transparent); }
+  .marke img { width: 88px; height: 88px; }
+  .menue-breit { order: 0; flex: none; border-top: 0; padding: 0; }
+  .menue-breit ul { flex-direction: column; margin: 0; gap: .15rem; }
+  .menue-breit a { white-space: normal; padding: .5rem .8rem; font-size: 1rem; }
+  .menue-breit a[aria-current="page"] { box-shadow: inset 4px 0 0 var(--farbe-menue); background: color-mix(in srgb, var(--auf-kopf) 12%, transparent); }
+  .menue-breit .untermenue summary { white-space: normal; padding: .5rem .8rem; font-size: 1rem; }
+  .menue-breit .untermenue summary.aktiv { box-shadow: inset 4px 0 0 var(--farbe-menue); }
+  .menue-breit .untermenue ul { position: static; background: none; box-shadow: none; padding: 0 0 0 .8rem; min-width: 0; }
+  .menue-breit .untermenue ul a { color: var(--auf-kopf); }
+  .menue-breit .untermenue ul a:hover { background: color-mix(in srgb, var(--auf-kopf) 15%, transparent); }
+  .kopf-sozial { order: 5; margin-top: auto; align-self: center; }
+  .kopf-sozial .sozial-symbole { flex-wrap: wrap; justify-content: center; }
+  main.breite, .fuss .breite { margin-left: 0; padding-left: 2.5rem; padding-right: 2.5rem; max-width: 64rem; }
+}
+.fuss { border-top: 1px solid var(--linie); }

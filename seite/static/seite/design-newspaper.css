@@ -1,0 +1,35 @@
+/* Design „Zeitung“: farbige Leiste oben, heller Kopf mit Name in Serifen, Menü als Reiter,
+   Startseite in zwei Spalten (am Handy untereinander) */
+:root { --schrift-titel: Georgia, Cambria, "Times New Roman", serif; }
+.kopf { position: relative; background: var(--flaeche); color: var(--text); border-top: 2.2rem solid var(--farbe-kopf); }
+.kopf :focus-visible { outline-color: var(--link); }
+.marke { font-family: var(--schrift-titel); font-size: 1.1rem; color: var(--link); }
+.marke img { width: 64px; height: 64px; }
+.menue summary { color: var(--link); }
+.kopf-sozial { position: absolute; right: 16px; top: -2.2rem; height: 2.2rem; display: none; align-items: center; }
+.kopf-sozial .sozial-symbole a { width: 1.8rem; height: 1.8rem; }
+@media (min-width: 64rem) {
+  .kopf-sozial { display: flex; }
+  .marke { font-size: 1.9rem; padding: 1rem 0; }
+  .marke img { width: 80px; height: 80px; }
+  .menue-breit {
+    order: 3; border-top: 0; padding: .3rem 0 0;
+    background: var(--farbe-menue); box-shadow: 0 0 0 100vmax var(--farbe-menue); clip-path: inset(0 -100vmax);
+  }
+  .menue-breit ul { margin: 0; gap: .2rem; }
+  .menue-breit a { color: var(--auf-menue); font-weight: 600; border-radius: 6px 6px 0 0; padding: .5rem .9rem; }
+  .menue-breit a:hover { background: color-mix(in srgb, var(--auf-menue) 15%, transparent); }
+  .menue-breit a[aria-current="page"] { box-shadow: none; background: var(--grund); color: var(--text); }
+  .menue-breit :focus-visible { outline-color: var(--auf-menue); }
+  .menue-breit .untermenue summary { color: var(--auf-menue); font-weight: 600; padding: .5rem .9rem; }
+  .menue-breit .untermenue summary:hover { background: color-mix(in srgb, var(--auf-menue) 15%, transparent); }
+}
+main h2 { font-family: var(--schrift-titel); border-bottom: 2px solid var(--farbe-zier); padding-bottom: .3rem; }
+@media (min-width: 64rem) {
+  main.start { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 0 2rem; align-items: start; }
+}
+.spalte-seite > section { background: var(--flaeche); border: 1px solid var(--linie); border-top: 4px solid var(--farbe-zier); border-radius: 6px; padding: 0 1rem 1rem; margin: 1.5rem 0; }
+.spalte-seite h2 { border: 0; font-size: 1.15rem; padding: 0; }
+.spalte-seite .karten { grid-template-columns: 1fr; }
+.spalte-seite .termin { border-width: 0 0 1px; border-radius: 0; padding: .6rem 0; }
+.spalte-seite .kacheln { grid-template-columns: 1fr; grid-auto-rows: auto; }
