@@ -1,107 +1,148 @@
 # HUBIplan-Website
 
-Öffentliche Vereinswebseiten mit Daten aus [HUBIplan](https://github.com/DeltaRP/hubiplan),
-der webbasierten Vereinsverwaltung. Jede Einheit, für die in HUBIplan eine Webseite
-eingerichtet ist (z. B. ein Verein), bekommt eine eigene Seite. Ihre Inhalte ändern sich
-mit den Daten in HUBIplan; Untereinheiten (z. B. Züge) erscheinen als Unterseiten.
+**Öffentliche Vereinswebseiten, die sich aus den Daten von [HUBIplan](https://github.com/DeltaRP/hubiplan) speisen.**
 
-Konzept: [docs/konzept.md](docs/konzept.md). Betrieb auf Test- und Echtserver:
-[docs/betrieb.md](docs/betrieb.md).
+Termine, Vorstand, Untereinheiten, Würdenträger, Chronik und Satzung pflegt der Verein ohnehin
+in HUBIplan. Die HUBIplan-Website macht daraus eine eigene Webseite unter der Domain des
+Vereins, ohne zweites Redaktionssystem und ohne doppelte Pflege. Texte, Bilder und
+Startseiten-Bausteine bearbeitet der Vorstand ebenfalls in HUBIplan, mit Entwurf, Vorschau
+und Veröffentlichen.
 
-## Inhalte
+> **English:** HUBIplan-Website renders public club websites from the public API of
+> [HUBIplan](https://github.com/DeltaRP/hubiplan), a free membership management system. It is
+> a stateless Django app without a database. The user interface and documentation are in
+> German; issues and security reports in English are welcome.
 
-- Startseite aus Bausteinen, die HUBIplan ein- und ausschaltet und ordnet: Begrüßung,
-  Bilderkarussell, nächste Termine, Geburtstage, aktuelle Majestäten, Untereinheiten
-- Aktuelles: eigene Beiträge der Einheit von Instagram und Facebook
-- Vorstand und Ansprechpartner mit Funktionsadressen und Ehrungen
-- Untereinheiten mit eigenen Unterseiten (Pfad nach der Bezeichnung in HUBIplan, z. B. `/zuege/`)
-- Terminkalender nach Monaten, Filter je Untereinheit, Abo fürs Smartphone mit QR-Code
-- Majestäten: Würden mit aktuellen Trägern und Chronik
-- Geschichte mit Chronik (Text) und Ämtern (z. B. Vorsitzende seit Gründung), Satzung, Dokumente und weitere Textseiten
-- Kontaktformular (der Browser schickt direkt an HUBIplan, Spamschutz dort)
-- Impressum und Datenschutzhinweise, auch im Wartungsmodus erreichbar
-- Wartungsmodus und Vorschau-Link aus HUBIplan
+## Inhalt
 
-Die Seite passt sich an Monitor, Tablet und Smartphone an. Alle Adressen stehen in
-[docs/betrieb.md](docs/betrieb.md#seiten).
+- [Funktionen](#funktionen)
+- [Aufbau](#aufbau)
+- [Technik](#technik)
+- [Entwicklung](#entwicklung)
+- [Selbst betreiben](#selbst-betreiben)
+- [Mitwirken](#mitwirken)
+- [Sicherheit](#sicherheit)
+- [Lizenz](#lizenz)
+
+## Funktionen
+
+- **Startseite aus Bausteinen**, die HUBIplan ein- und ausschaltet und ordnet: Begrüßung,
+  Bilderkarussell, nächste Termine, Geburtstage, aktuelle Würdenträger, Untereinheiten
+- **Aktuelles**: eigene Beiträge des Vereins von Instagram und Facebook
+- **Vorstand und Ansprechpartner** mit Funktionsadressen und Ehrungen
+- **Untereinheiten** (z. B. Abteilungen oder Züge) mit eigenen Unterseiten; der Pfad folgt
+  der Bezeichnung in HUBIplan
+- **Terminkalender** nach Monaten, Filter je Untereinheit, Kalender-Abo fürs Smartphone mit
+  QR-Code
+- **Würden** mit aktuellen Trägern und Chronik, **Geschichte** mit Chronik und Ämtern,
+  Satzung, Dokumente und weitere Textseiten
+- **Kontaktformular**: Der Browser schickt direkt an HUBIplan, Spamschutz ohne Fremddienst
+- **Impressum und Datenschutzhinweise**, auch im Wartungsmodus erreichbar
+- **Wartungsmodus und Vorschau-Link** aus HUBIplan
+- mehrere Gestaltungen, Farben und Wappen des Vereins aus HUBIplan; passt sich an Monitor,
+  Tablet und Smartphone an
+
+Alle Seiten und Adressen: [docs/betrieb.md](docs/betrieb.md#seiten).
 
 ## Aufbau
 
-Die Webseite ist reine **Darstellung**. Sie liest ausschließlich die öffentliche,
-versionierte Schnittstelle von HUBIplan (`/api/public/site/v1/…`) und hat keinen Zugriff
-auf die Datenbank. Welche Daten öffentlich sind (Einwilligungen, Widerspruch, Kennzeichen
-an Rollen), entscheidet allein HUBIplan. So kann auch eine fehlerhafte Webseite keine
+Die Webseite ist reine **Darstellung**. Sie liest ausschließlich die öffentliche, versionierte
+Schnittstelle von HUBIplan (`/api/public/site/v1/…`) und hat keinen Zugriff auf dessen
+Datenbank. Welche Daten öffentlich sind (Einwilligungen, Widerspruch, Kennzeichen an Rollen),
+entscheidet allein HUBIplan. So kann auch eine fehlerhafte Webseite keine geschützten
 Mitgliederdaten zeigen.
-
-Ein Container bedient alle Einheiten; welche Einheit gemeint ist, ergibt sich aus dem
-Hostnamen. Bilder und Logos kommen über die Seite selbst (`/medien/…`).
 
 ```text
 Browser ──HTTPS──> Webserver ──> Container website ──> HUBIplan (/api/public/site/v1/)
 ```
 
+Ein Container bedient alle Vereine einer HUBIplan-Instanz; welche Webseite gemeint ist,
+ergibt sich aus dem Hostnamen. Bilder und Logos liefert die Seite selbst aus (`/medien/…`),
+damit der Browser keine zweite Adresse braucht. Konzept: [docs/konzept.md](docs/konzept.md).
+
 ## Technik
 
 | Teil | Technik |
 | --- | --- |
-| Anwendung | Python 3.12, Django 5.2 LTS ohne Datenbank |
+| Anwendung | Python 3.13, Django 5.2 LTS ohne Datenbank |
 | Texte | markdown-it-py (Markdown aus HUBIplan) |
 | QR-Codes | qrcode (Kalender-Abo) |
-| Auslieferung | gunicorn, whitenoise, Docker |
+| Auslieferung | gunicorn, whitenoise, Docker (schreibgeschützt, ohne Zusatzrechte) |
 
 ```text
 config/           Einstellungen (nur Umgebungsvariablen), URLs
 seite/            Abruf der Schnittstelle, Ansichten, Vorlagen, CSS
 tests/            pytest mit nachgebildeter Schnittstelle (tests/fake.py)
 deploy/           Ausrollen, Servereinrichtung, HestiaCP-Vorlagen
-scripts/test.sh   Testlauf vor dem Ausrollen
+scripts/test.sh   vollständiger Test
 docs/             Konzept, Betrieb und Lizenzen
 ```
 
 ## Entwicklung
 
 Alle Einstellungen kommen aus Umgebungsvariablen (Vorlage [.env.example](.env.example),
-Beschreibung in `config/settings.py`). Lokal gegen ein HUBIplan auf Port 8000:
+Beschreibung in `config/settings.py`). Lokal gegen ein HUBIplan auf Port 8000 (siehe
+[Ausprobieren mit Docker](https://github.com/DeltaRP/hubiplan#ausprobieren-mit-docker), mit
+Demodaten aus `seed_testdata`):
 
 ```bash
 python -m venv .venv && . .venv/bin/activate
 pip install -r requirements-dev.txt
-DJANGO_DEBUG=1 HUBIPLAN_API_URL=http://localhost:8000 python manage.py runserver 8001
+DJANGO_DEBUG=1 HUBIPLAN_API_URL=http://localhost:8000 \
+  SITE_HOST_OVERRIDE=www.hubertus-grimlinghausen.test python manage.py runserver 8001
 ```
 
-## Tests
+`SITE_HOST_OVERRIDE` ordnet alle Aufrufe der Demo-Webseite zu; ohne die Variable entscheidet
+der Hostname. Die Demo-Webseite steht im Wartungsmodus; ansehen über „Vorschau öffnen“ in
+HUBIplan unter Webseite › Einstellungen.
 
-Tests laufen nur über `scripts/test.sh`, lokal in WSL mit Docker:
+**Tests:**
+
+```bash
+ruff check . && ruff format --check .   # schnelle Prüfung
+scripts/test.sh <commit>                # vollständiger Test in einem Wegwerf-Container
+```
+
+Die Tests nutzen eine nachgebildete Schnittstelle mit erfundenen Daten (`tests/fake.py`) und
+brauchen kein laufendes HUBIplan. `scripts/test.sh` prüft nur den eingecheckten Stand und holt
+sich dafür einen Testplatz mit `testplatz` (aus
+[hubiplan/scripts/testplatz.sh](https://github.com/DeltaRP/hubiplan/blob/main/scripts/testplatz.sh),
+Installation steht im Kopf der Datei). Tests laufen nie auf einem Server.
+
+## Selbst betreiben
+
+Voraussetzung ist eine laufende HUBIplan-Instanz auf demselben Server; die Webseite hängt
+sich in deren Docker-Netz `hubiplan_web`. Ausgerollt wird per SSH, nur nach grünem Test:
 
 ```bash
 scripts/test.sh <commit>
+DEPLOY_HOST=root@server.example.org deploy/deploy.sh <commit>
 ```
 
-Das Skript prüft den eingecheckten Stand mit ruff und pytest. Die Tests nutzen eine
-nachgebildete Schnittstelle mit erfundenen Daten (`tests/fake.py`), nie den Testserver.
+- Beim ersten Ausrollen entsteht auf dem Server eine `.env` aus [.env.example](.env.example)
+  mit zufälligem Schlüssel. Angaben für den Betrieb hinter einem vorhandenen Webserver
+  (`WEBSITE_HINTER_PROXY=1`, `SITE_DOMAINS`, `HUBIPLAN_HOST`) stehen im Kopf von
+  [deploy/deploy.sh](deploy/deploy.sh).
+- Die neue Fassung wird neben der laufenden gebaut; wird sie nicht gesund, geht es
+  automatisch zurück.
+- In HUBIplan den Verein anlegen, das Modul Webseite einschalten und unter Webseite ›
+  Internetadresse die Domain eintragen.
 
-Feste Regeln:
+Einzelheiten, Wartungsschalter und ein Beispiel hinter HestiaCP:
+[docs/betrieb.md](docs/betrieb.md).
 
-- **Tests laufen nie auf dem Testserver**, auch keine Test-Container.
-- **Höchstens zwei Testläufe gleichzeitig, jeder höchstens 8 Kerne**, für alle Projekte auf
-  Ralfs PC zusammen. `scripts/test.sh` holt sich dafür einen Platz mit `testplatz` (aus
-  `hubiplan/scripts/testplatz.sh`, siehe `docs/testserver.md` in hubiplan).
-- Keine echten Vereinsdaten im Repository (Namen, Königslisten, Fotos). Echte Daten
-  kommen nur im Echtbetrieb über HUBIplan.
-- GitHub Actions läuft nur von Hand (workflow_dispatch), nie automatisch.
+## Mitwirken
 
-## Ausrollen
+Fehlermeldungen, Ideen und Pull Requests sind willkommen: [CONTRIBUTING.md](CONTRIBUTING.md).
+Bitte nur erfundene Daten in Code, Tests und Bildschirmfotos, nie echte Vereinsdaten wie
+Namen, Königslisten oder Fotos. Datenschutzregeln (was öffentlich sein darf) gehören nach
+[hubiplan](https://github.com/DeltaRP/hubiplan), nicht hierher.
 
-Nur lokal getestete Stände:
+## Sicherheit
 
-```bash
-scripts/test.sh origin/main
-deploy/deploy.sh origin/main
-```
-
-Auf dem Testserver läuft die Seite als Container `website` im Docker-Netz von HUBIplan
-hinter Caddy, im Echtbetrieb hinter nginx von HestiaCP. Einzelheiten, Umgebungsvariablen und
-Wartungsschalter: [docs/betrieb.md](docs/betrieb.md).
+Sicherheitslücken bitte **nicht** als öffentliches Issue melden, sondern vertraulich über
+[GitHub](https://github.com/DeltaRP/hubiplan-website/security/advisories/new). Einzelheiten:
+[SECURITY.md](SECURITY.md).
 
 ## Lizenz
 
@@ -113,9 +154,11 @@ und/oder ändern, entweder gemäß Version 3 der Lizenz oder (nach Ihrer Wahl) j
 Version (`AGPL-3.0-or-later`), wie HUBIplan selbst.
 
 Die Software wird in der Hoffnung verbreitet, dass sie nützlich ist, aber **ohne jede
-Gewährleistung**, sogar ohne die implizite Gewährleistung der Marktreife oder der Eignung
-für einen bestimmten Zweck. Einzelheiten stehen in der Lizenz. Den vollständigen
-Lizenztext (englisch, maßgeblich) enthält die Datei [LICENSE](LICENSE).
+Gewährleistung**, sogar ohne die implizite Gewährleistung der Marktreife oder der Eignung für
+einen bestimmten Zweck. Einzelheiten stehen in der Lizenz. Den vollständigen Lizenztext
+(englisch, maßgeblich) enthält die Datei [LICENSE](LICENSE).
 
 Wer eine veränderte Fassung der Webseite öffentlich betreibt, muss ihren Quellcode unter
-derselben Lizenz zugänglich machen.
+derselben Lizenz zugänglich machen; die Fußzeile jeder Seite verlinkt dazu den Quellcode der
+laufenden Fassung. Lizenzen der Abhängigkeiten und der HestiaCP-Vorlagen (GPL-3.0):
+[docs/lizenzen.md](docs/lizenzen.md).
