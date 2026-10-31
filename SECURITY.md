@@ -1,9 +1,64 @@
-# Sicherheitslücken melden
+# Sicherheit
 
-Bitte meldet Sicherheitslücken **nicht** als öffentliches Issue, sondern vertraulich über
-GitHub: im Repository unter **Security › Report a vulnerability**. Beschreibt, was betroffen
-ist und wie es sich nachvollziehen lässt. Wir antworten so schnell wie möglich und
-veröffentlichen eine Korrektur, bevor Einzelheiten bekannt werden.
+Die HUBIplan-Website zeigt öffentliche Daten aus HUBIplan, einer Vereinsverwaltung mit
+personenbezogenen Daten. Hinweise auf Sicherheitslücken nehmen wir deshalb sehr ernst und sind
+für jede Meldung dankbar.
 
-Bitte prüft nur gegen eine eigene Installation mit erfundenen Daten, nie gegen fremde
-Server oder echte Vereinsdaten.
+*Reports in English are welcome.*
+
+## Lücke melden
+
+Bitte **kein öffentliches Issue**, sondern vertraulich über GitHub:
+[Report a vulnerability](https://github.com/DeltaRP/hubiplan-website/security/advisories/new)
+(im Repository unter **Security › Report a vulnerability**).
+
+Hilfreich sind:
+
+- betroffene Fassung (Commit) und betroffener Teil (z. B. Seite, Vorlage, Einstellung),
+- Schritte zum Nachvollziehen, am besten mit den Demodaten von HUBIplan (`seed_testdata`)
+  oder der nachgebildeten Schnittstelle der Tests,
+- eingeschätzte Auswirkung: Was kann ein Besucher sehen oder auslösen, was er nicht dürfte?
+
+## Was dann passiert
+
+- Wir bestätigen den Eingang in der Regel innerhalb von 7 Tagen.
+- Wir prüfen die Meldung, halten dich auf dem Laufenden und stimmen eine Korrektur mit dir ab.
+- Die Korrektur erscheint zuerst; Einzelheiten veröffentlichen wir danach als
+  Sicherheitshinweis (GitHub Security Advisory), auf Wunsch mit Nennung deines Namens.
+- Bitte gib uns bis zur Korrektur, höchstens 90 Tage ab Meldung, Zeit, bevor du Einzelheiten
+  veröffentlichst.
+
+## Unterstützte Fassungen
+
+Die Webseite wird fortlaufend aus `main` ausgerollt; es gibt keine Release-Zweige.
+Korrekturen gibt es für den aktuellen Stand von `main`.
+
+## Umfang
+
+Gemeint ist der Code in diesem Repository: Darstellung, Vorlagen, Abruf der Schnittstelle,
+Medien-Weiterleitung, Vorschau und Wartungsmodus sowie die Skripte und Vorlagen fürs
+Ausrollen. Besonders interessant sind:
+
+- Cross-Site-Scripting oder eingeschleuste Inhalte über Texte und Daten aus HUBIplan,
+- Zugriff auf Seiten im Wartungsmodus oder auf Vorschauen ohne gültigen Vorschau-Link,
+- Abrufe über `/medien/…`, die mehr als Bilder und Logos aus HUBIplan erreichen,
+- Daten eines anderen Vereins auf einer Webseite (Zuordnung über den Hostnamen).
+
+Zeigt die Webseite Daten, die HUBIplan gar nicht hätte herausgeben dürfen, liegt der Fehler
+meist in HUBIplan; dann bitte [dort melden](https://github.com/DeltaRP/hubiplan/security/advisories/new).
+
+Nicht gemeint sind Lücken in Fremdsoftware (bitte dort melden), reine Last- oder
+Überlastungsangriffe, Social Engineering sowie Befunde ohne Auswirkung (z. B. fehlende
+Header ohne Angriffsweg).
+
+## Regeln fürs Prüfen
+
+- Prüfe **nur gegen eine eigene Installation** mit erfundenen Daten, z. B. mit
+  HUBIplan per `docker compose up` und `seed_testdata`.
+- Keine Angriffe auf fremde Vereinswebseiten, HUBIplan-Instanzen oder echte Vereinsdaten, keine
+  Überlastungsangriffe.
+- Stößt du doch auf echte personenbezogene Daten, greife nicht weiter darauf zu, speichere
+  nichts und melde es uns.
+
+Wer sich an diese Regeln hält und in gutem Glauben handelt, hat von uns keine rechtlichen
+Schritte zu erwarten.
