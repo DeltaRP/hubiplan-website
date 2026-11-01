@@ -5,7 +5,7 @@ willkommen. Contributions in English are welcome as well.
 
 ## Bevor du loslegst
 
-- **Fehler und Ideen** als [Issue](https://github.com/DeltaRP/hubiplan-website/issues) melden. Für
+- **Fehler und Ideen** als [Issue](https://github.com/hubiplan/hubiplan-website/issues) melden. Für
   größere Änderungen bitte zuerst ein Issue eröffnen und den Weg absprechen, damit keine
   Arbeit umsonst ist.
 - **Sicherheitslücken** nie öffentlich, sondern wie in [SECURITY.md](SECURITY.md) beschrieben.
@@ -28,7 +28,7 @@ Hinweise zum Stil:
 - Oberfläche, Dokumentation und Commit-Nachrichten sind **deutsch**, in einfacher Sprache.
 - Die Webseite liest nur die öffentliche Schnittstelle von HUBIplan, nie dessen Datenbank.
   Was öffentlich sein darf, entscheidet HUBIplan; Änderungen daran gehören nach
-  [hubiplan](https://github.com/DeltaRP/hubiplan).
+  [hubiplan](https://github.com/hubiplan/hubiplan).
 - Neue Funktionen allgemein halten: Die Seite soll für Vereine jeder Art passen.
   Besonderheiten gehören hinter Bausteine oder Einstellungen in HUBIplan.
 - Links auf der Webseite werden nie unterstrichen (auch nicht beim Darüberfahren); sie sind

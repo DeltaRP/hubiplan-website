@@ -177,7 +177,7 @@ def jahr():
     return datetime.date.today().year
 
 
-QUELLCODE = "https://github.com/DeltaRP/hubiplan-website"
+QUELLCODE = "https://github.com/hubiplan/hubiplan-website"
 FASSUNG = Path(__file__).resolve().parents[2] / ".fassung"
 
 

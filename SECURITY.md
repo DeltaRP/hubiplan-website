@@ -9,7 +9,7 @@ für jede Meldung dankbar.
 ## Lücke melden
 
 Bitte **kein öffentliches Issue**, sondern vertraulich über GitHub:
-[Report a vulnerability](https://github.com/DeltaRP/hubiplan-website/security/advisories/new)
+[Report a vulnerability](https://github.com/hubiplan/hubiplan-website/security/advisories/new)
 (im Repository unter **Security › Report a vulnerability**).
 
 Hilfreich sind:
@@ -45,7 +45,7 @@ Ausrollen. Besonders interessant sind:
 - Daten eines anderen Vereins auf einer Webseite (Zuordnung über den Hostnamen).
 
 Zeigt die Webseite Daten, die HUBIplan gar nicht hätte herausgeben dürfen, liegt der Fehler
-meist in HUBIplan; dann bitte [dort melden](https://github.com/DeltaRP/hubiplan/security/advisories/new).
+meist in HUBIplan; dann bitte [dort melden](https://github.com/hubiplan/hubiplan/security/advisories/new).
 
 Nicht gemeint sind Lücken in Fremdsoftware (bitte dort melden), reine Last- oder
 Überlastungsangriffe, Social Engineering sowie Befunde ohne Auswirkung (z. B. fehlende
