@@ -1,6 +1,6 @@
 # HUBIplan-Website
 
-**Öffentliche Vereinswebseiten, die sich aus den Daten von [HUBIplan](https://github.com/DeltaRP/hubiplan) speisen.**
+**Öffentliche Vereinswebseiten, die sich aus den Daten von [HUBIplan](https://github.com/hubiplan/hubiplan) speisen.**
 
 Termine, Vorstand, Untereinheiten, Würdenträger, Chronik und Satzung pflegt der Verein ohnehin
 in HUBIplan. Die HUBIplan-Website macht daraus eine eigene Webseite unter der Domain des
@@ -9,7 +9,7 @@ Startseiten-Bausteine bearbeitet der Vorstand ebenfalls in HUBIplan, mit Entwurf
 und Veröffentlichen.
 
 > **English:** HUBIplan-Website renders public club websites from the public API of
-> [HUBIplan](https://github.com/DeltaRP/hubiplan), a free membership management system. It is
+> [HUBIplan](https://github.com/hubiplan/hubiplan), a free membership management system. It is
 > a stateless Django app without a database. The user interface and documentation are in
 > German; issues and security reports in English are welcome.
 
@@ -82,7 +82,7 @@ docs/             Konzept, Betrieb und Lizenzen
 
 Alle Einstellungen kommen aus Umgebungsvariablen (Vorlage [.env.example](.env.example),
 Beschreibung in `config/settings.py`). Lokal gegen ein HUBIplan auf Port 8000 (siehe
-[Ausprobieren mit Docker](https://github.com/DeltaRP/hubiplan#ausprobieren-mit-docker), mit
+[Ausprobieren mit Docker](https://github.com/hubiplan/hubiplan#ausprobieren-mit-docker), mit
 Demodaten aus `seed_testdata`):
 
 ```bash
@@ -106,7 +106,7 @@ scripts/test.sh <commit>                # vollständiger Test in einem Wegwerf-C
 Die Tests nutzen eine nachgebildete Schnittstelle mit erfundenen Daten (`tests/fake.py`) und
 brauchen kein laufendes HUBIplan. `scripts/test.sh` prüft nur den eingecheckten Stand und holt
 sich dafür einen Testplatz mit `testplatz` (aus
-[hubiplan/scripts/testplatz.sh](https://github.com/DeltaRP/hubiplan/blob/main/scripts/testplatz.sh),
+[hubiplan/scripts/testplatz.sh](https://github.com/hubiplan/hubiplan/blob/main/scripts/testplatz.sh),
 Installation steht im Kopf der Datei). Tests laufen nie auf einem Server.
 
 ## Selbst betreiben
@@ -136,12 +136,12 @@ Einzelheiten, Wartungsschalter und ein Beispiel hinter HestiaCP:
 Fehlermeldungen, Ideen und Pull Requests sind willkommen: [CONTRIBUTING.md](CONTRIBUTING.md).
 Bitte nur erfundene Daten in Code, Tests und Bildschirmfotos, nie echte Vereinsdaten wie
 Namen, Königslisten oder Fotos. Datenschutzregeln (was öffentlich sein darf) gehören nach
-[hubiplan](https://github.com/DeltaRP/hubiplan), nicht hierher.
+[hubiplan](https://github.com/hubiplan/hubiplan), nicht hierher.
 
 ## Sicherheit
 
 Sicherheitslücken bitte **nicht** als öffentliches Issue melden, sondern vertraulich über
-[GitHub](https://github.com/DeltaRP/hubiplan-website/security/advisories/new). Einzelheiten:
+[GitHub](https://github.com/hubiplan/hubiplan-website/security/advisories/new). Einzelheiten:
 [SECURITY.md](SECURITY.md).
 
 ## Lizenz

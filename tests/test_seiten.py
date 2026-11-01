@@ -37,12 +37,12 @@ def test_startseite(client, hubiplan):
     assert "https://hubiplan.example" in r["Content-Security-Policy"]
     # Fußzeile verlinkt HUBIplan auf GitHub, in neuem Fenster
     assert (
-        'Daten aus <a href="https://github.com/DeltaRP/hubiplan" '
+        'Daten aus <a href="https://github.com/hubiplan/hubiplan" '
         'target="_blank" rel="noopener noreferrer">HUBIplan<'
     ) in html
     # AGPL § 13: Quellcode der Webseite
     assert (
-        '<a href="https://github.com/DeltaRP/hubiplan-website" '
+        '<a href="https://github.com/hubiplan/hubiplan-website" '
         'rel="noopener noreferrer">Quellcode</a>' in html
     )
 
@@ -797,9 +797,9 @@ def test_quellcode_der_laufenden_fassung(tmp_path, monkeypatch):
     monkeypatch.setattr(tags, "FASSUNG", datei)
     tags._fassung.cache_clear()
     try:
-        assert tags.quellcode() == f"https://github.com/DeltaRP/hubiplan-website/tree/{sha}"
+        assert tags.quellcode() == f"https://github.com/hubiplan/hubiplan-website/tree/{sha}"
         datei.write_text("kein commit")
         tags._fassung.cache_clear()
-        assert tags.quellcode() == "https://github.com/DeltaRP/hubiplan-website"
+        assert tags.quellcode() == "https://github.com/hubiplan/hubiplan-website"
     finally:
         tags._fassung.cache_clear()
