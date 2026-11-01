@@ -9,6 +9,10 @@ from pathlib import Path
 
 from django import template
 from django.urls import reverse
+from django.utils.formats import date_format
+from django.utils.html import json_script
+from django.utils.translation import get_language, gettext_noop
+from django.utils.translation import gettext as _
 
 from .. import markdown
 
@@ -43,7 +47,7 @@ def menue(context):
     if site is None or site.maintenance and not site.is_preview:
         return []
     info = site.info
-    items = [("Start", reverse("start"))]
+    items = [(_("Start"), reverse("start"))]
     nav = info.get("nav")
     if isinstance(nav, list):
         items += _nav_items(site, nav)
@@ -129,13 +133,13 @@ def _legacy_items(site) -> list:
     from seite.views import has_posts
 
     if site.block("posts") and has_posts(info):
-        items.append(("Aktuelles", reverse("aktuelles")))
+        items.append((_("Aktuelles"), reverse("aktuelles")))
     if site.block("events"):
-        items.append(("Termine", reverse("termine")))
+        items.append((_("Termine"), reverse("termine")))
     if site.block("board"):
-        items.append(("Vorstand", reverse("vorstand")))
+        items.append((_("Vorstand"), reverse("vorstand")))
     if info.get("units"):
-        items.append((info.get("unit_label_plural") or "Einheiten", einheiten_url(site)))
+        items.append((info.get("unit_label_plural") or _("Einheiten"), einheiten_url(site)))
     grouped = info.get("honors_menu")
     if grouped:
         # Menüpunkt „Würdenträger“ mit Unterpunkten je Würde und „Ehrungen“ (Ralf 2026-10-31)
@@ -145,31 +149,31 @@ def _legacy_items(site) -> list:
             if d.get("id") and d.get("label")
         ]
         if grouped.get("honorary"):
-            children.append((grouped.get("honorary_label") or "Ehrungen", reverse("ehrungen")))
+            children.append((grouped.get("honorary_label") or _("Ehrungen"), reverse("ehrungen")))
         if len(children) == 1:
             items.append(children[0])
         elif children:
-            items.append((grouped.get("label") or "Würdenträger", children))
+            items.append((grouped.get("label") or _("Würdenträger"), children))
     elif site.block("honors"):
         # Bei nur einer Würde ihr Name (in der Mehrzahl), sonst „Majestäten“
-        items.append((info.get("honors_label") or "Majestäten", reverse("majestaeten")))
+        items.append((info.get("honors_label") or _("Majestäten"), reverse("majestaeten")))
     pages = info.get("menu") or []
     # Menü „Geschichte“ mit „Chronik“ und „Ämter“ (Ralf 2026-10-31); nur eins: direkt
     chronik, aemter = site.history_parts()
-    parts = [("Chronik", reverse("chronik"))] if chronik else []
+    parts = [(_("Chronik"), reverse("chronik"))] if chronik else []
     if aemter:
-        parts.append(("Ämter", reverse("aemter")))
+        parts.append((_("Ämter"), reverse("aemter")))
     if len(parts) == 1:
         items.append(parts[0])
     elif parts:
-        items.append(("Geschichte", parts))
+        items.append((_("Geschichte"), parts))
     for p in pages:
         if p.get("slug") and p["slug"] != "geschichte":
             items.append((p.get("title") or p["slug"], reverse("seite", args=[p["slug"]])))
     if info.get("statute_url") or info.get("fee_rules_url") or info.get("founding_deed_url"):
-        items.append(("Dokumente", reverse("dokumente")))
+        items.append((_("Dokumente"), reverse("dokumente")))
     if site.block("contact"):
-        items.append(("Kontakt", reverse("kontakt")))
+        items.append((_("Kontakt"), reverse("kontakt")))
     return items
 
 
@@ -205,9 +209,29 @@ def mit_begleitung(reigns) -> bool:
     return any(r.get("companions") for r in reigns or [])
 
 
-@register.filter
-def datum(value):
-    """ISO-Datum (Text) → 1.4.2020."""
+# Datumsformate je Sprache (Englisch nach britischer Schreibweise, Konzept F4)
+DATE_FORMATS = {
+    "de": {
+        "kurz": "j.n.Y",
+        "tag": "j. F Y",
+        "lang": "l, j. F Y",
+        "zeit": r"j. F Y, H:i \U\h\r",
+        "uhr": r"H:i \U\h\r",
+    },
+    "en": {
+        "kurz": "d/m/Y",
+        "tag": "j F Y",
+        "lang": "l j F Y",
+        "zeit": "j F Y, H:i",
+        "uhr": "H:i",
+    },
+}
+
+
+@register.filter(expects_localtime=True)
+def datum(value, art: str = "kurz"):
+    """Datum (ISO-Text, date oder datetime) in der Sprache der Seite: ``kurz`` 1.4.2020,
+    ``tag`` 1. April 2020, ``lang`` mit Wochentag, ``zeit`` mit Uhrzeit, ``uhr`` nur Uhrzeit."""
     if not value:
         return ""
     if isinstance(value, str):
@@ -215,7 +239,8 @@ def datum(value):
             value = datetime.date.fromisoformat(value[:10])
         except ValueError:
             return value
-    return f"{value.day}.{value.month}.{value.year}"
+    formate = DATE_FORMATS.get((get_language() or "de")[:2], DATE_FORMATS["de"])
+    return date_format(value, formate.get(art, formate["kurz"]))
 
 
 @register.filter
@@ -297,3 +322,46 @@ def tel(number: str) -> str:
     if len(digits) < 3:
         return ""
     return ("+" if plus else "") + digits
+
+
+# Texte der Skripte (kontakt.js, karussell.js). Auf deutschen Seiten entfällt die Liste,
+# die Skripte nehmen dann ihren eigenen Text.
+JS_TEXTE = (
+    gettext_noop("Bitte Ihren Namen eingeben."),
+    gettext_noop("Bitte eine gültige E-Mail-Adresse eingeben, z. B. name@beispiel.de."),
+    gettext_noop("Bitte einen Betreff eingeben."),
+    gettext_noop("Bitte eine Nachricht mit mindestens 10 Zeichen eingeben."),
+    gettext_noop("Bitte die markierten Felder prüfen."),
+    gettext_noop("Nachricht wird vorbereitet …"),
+    gettext_noop("Nachricht wird gesendet …"),
+    gettext_noop("Danke! Ihre Nachricht ist angekommen."),
+    gettext_noop("Weitere Nachricht"),
+    gettext_noop("Die Nachricht konnte nicht gesendet werden."),
+    gettext_noop(
+        "Sicherheitsprüfung erneuert. Ihre Nachricht bleibt erhalten. Bitte senden Sie erneut."
+    ),
+    gettext_noop(
+        "Das Formular ist abgelaufen. Bitte kopieren Sie Ihre Nachricht "
+        "und laden Sie die Seite neu."
+    ),
+    gettext_noop(
+        "Diese Nachricht ist bereits bei uns angekommen. Sie müssen sie nicht erneut senden."
+    ),
+    gettext_noop(
+        "An diese Stelle kann gerade keine Nachricht gehen. Bitte schreiben Sie über den "
+        "Menüpunkt „Kontakt“ an den Verein."
+    ),
+    gettext_noop("Bitte die Angaben prüfen."),
+    gettext_noop("Zu viele Nachrichten. Bitte später erneut versuchen."),
+    gettext_noop("Die Nachricht konnte nicht gesendet werden. Bitte später erneut versuchen."),
+    gettext_noop("Weiter abspielen"),
+    gettext_noop("Anhalten"),
+)
+
+
+@register.simple_tag
+def seite_texte():
+    """Übersetzungen für die Skripte als JSON-Block (nur, wenn die Seite nicht deutsch ist)."""
+    if (get_language() or "de")[:2] == "de":
+        return ""
+    return json_script({t: _(t) for t in JS_TEXTE}, "seite-texte")

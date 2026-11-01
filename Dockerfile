@@ -10,6 +10,13 @@ ARG DEV=0
 RUN pip install -r requirements.txt && if [ "$DEV" = "1" ]; then pip install -r requirements-dev.txt; fi
 
 COPY . .
+# Übersetzungen (hubiplan/konzepte/englisch.md, W1): .po → .mo beim Bauen. GNU gettext bleibt
+# nur im Testabbild, im Betrieb wird es wieder entfernt.
+RUN apt-get update -q && apt-get install -y -q --no-install-recommends gettext > /dev/null \
+    && DJANGO_SECRET_KEY=nur-zum-bauen python manage.py compilemessages -v0 \
+    && if [ "$DEV" != "1" ]; then \
+           apt-get purge -y -q gettext > /dev/null && apt-get autoremove -y -q > /dev/null; fi \
+    && rm -rf /var/lib/apt/lists/*
 RUN DJANGO_SECRET_KEY=nur-zum-bauen python manage.py collectstatic --noinput -v0 \
     && useradd --system --uid 10001 --no-create-home seite
 USER seite

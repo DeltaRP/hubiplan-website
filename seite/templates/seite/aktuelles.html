@@ -1,10 +1,10 @@
-{% extends "seite/basis.html" %}{% load seite %}
-{% block titel %}Aktuelles · {% endblock %}
+{% extends "seite/basis.html" %}{% load seite i18n %}
+{% block titel %}{% translate "Aktuelles ·" %} {% endblock %}
 {% block inhalt %}
-<h1>Aktuelles</h1>
+<h1>{% translate "Aktuelles" %}</h1>
 {% if kinds %}<p class="auswahl klein">
-  <a href="{% url 'aktuelles' %}"{% if not kind %} aria-current="page"{% endif %}>Alle</a>
+  <a href="{% url 'aktuelles' %}"{% if not kind %} aria-current="page"{% endif %}>{% translate "Alle" %}</a>
   {% for k in kinds %} · <a href="{% url 'aktuelles' %}?kanal={{ k }}"{% if kind == k %} aria-current="page"{% endif %}>{% if k == "instagram" %}Instagram{% else %}Facebook{% endif %}</a>{% endfor %}
 </p>{% endif %}
-{% if posts %}{% include "seite/beitraege.html" with beitraege=posts %}{% else %}<p>Noch keine Beiträge.</p>{% endif %}
+{% if posts %}{% include "seite/beitraege.html" with beitraege=posts %}{% else %}<p>{% translate "Noch keine Beiträge." %}</p>{% endif %}
 {% endblock %}

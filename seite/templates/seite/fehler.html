@@ -1,9 +1,9 @@
-{% extends "seite/basis.html" %}
+{% extends "seite/basis.html" %}{% load i18n %}
 {% block titel %}{{ title }} · {% endblock %}
 {% block inhalt %}
 <section class="hinweis-seite">
   <h1>{{ title }}</h1>
   {% if text %}<p>{{ text }}</p>{% endif %}
-  <p><a class="knopf" href="{% url 'start' %}">Zur Startseite</a></p>
+  <p><a class="knopf" href="{% url 'start' %}">{% translate "Zur Startseite" %}</a></p>
 </section>
 {% endblock %}

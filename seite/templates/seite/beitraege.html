@@ -1,19 +1,19 @@
-{% load seite %}{# Beiträge aus Instagram/Facebook: Text und Bilder kommen von HUBIplan, nichts von Meta #}
+{% load seite i18n %}{# Beiträge aus Instagram/Facebook: Text und Bilder kommen von HUBIplan, nichts von Meta #}
 <ul class="beitraege">
 {% for p in beitraege %}
   <li class="beitrag karte">
     {% if p.images %}{% with b=p.images.0 %}{% lokal site b.url as bild %}{% if bild %}
     <figure class="beitrag-bild{% if b.is_video %} beitrag-video{% endif %}">
       <img src="{{ bild }}" alt="{{ b.alt }}"{% if b.width %} width="{{ b.width }}" height="{{ b.height }}"{% endif %} loading="lazy">
-      {% if b.is_video %}<span class="beitrag-marke">Video</span>{% elif p.images|length > 1 %}<span class="beitrag-marke">{{ p.images|length }} Bilder</span>{% endif %}
+      {% if b.is_video %}<span class="beitrag-marke">{% translate "Video" %}</span>{% elif p.images|length > 1 %}<span class="beitrag-marke">{{ p.images|length }} Bilder</span>{% endif %}
     </figure>{% endif %}{% endwith %}{% endif %}
     {% if p.images|length > 1 %}<ul class="beitrag-weitere">{% for b in p.images|slice:"1:5" %}{% lokal site b.url as bild %}{% if bild %}<li><img src="{{ bild }}?size=small" alt="{{ b.alt }}" loading="lazy"></li>{% endif %}{% endfor %}</ul>{% endif %}
-    <p class="klein">{% if p.when %}<time datetime="{{ p.when|date:'c' }}">{{ p.when|date:"j. F Y" }}</time> · {% endif %}{{ p.kind_label }}</p>
+    <p class="klein">{% if p.when %}<time datetime="{{ p.when|date:'c' }}">{{ p.when|datum:"tag" }}</time> · {% endif %}{{ p.kind_label }}</p>
     {% if p.text %}{% if p.text|wordcount > 45 %}
     <p class="beitrag-text">{{ p.text|truncatewords:40 }}</p>
-    <details class="beitrag-mehr"><summary>Weiterlesen</summary><p class="beitrag-text">{{ p.text|linebreaksbr }}</p></details>
+    <details class="beitrag-mehr"><summary>{% translate "Weiterlesen" %}</summary><p class="beitrag-text">{{ p.text|linebreaksbr }}</p></details>
     {% else %}<p class="beitrag-text">{{ p.text|linebreaksbr }}</p>{% endif %}{% endif %}
-    {% if p.permalink %}<p class="klein"><a href="{{ p.permalink }}" rel="noopener noreferrer nofollow" target="_blank">{% if p.media_type == "video" %}Video{% else %}Beitrag{% endif %} auf {{ p.kind_label }} ansehen<span class="nur-vorlesen"> (öffnet in neuem Fenster)</span></a></p>{% endif %}
+    {% if p.permalink %}<p class="klein"><a href="{{ p.permalink }}" rel="noopener noreferrer nofollow" target="_blank">{% if p.media_type == "video" %}{% blocktranslate with ort=p.kind_label %}Video auf {{ ort }} ansehen{% endblocktranslate %}{% else %}{% blocktranslate with ort=p.kind_label %}Beitrag auf {{ ort }} ansehen{% endblocktranslate %}{% endif %}<span class="nur-vorlesen"> {% translate "(öffnet in neuem Fenster)" %}</span></a></p>{% endif %}
   </li>
 {% endfor %}
 </ul>

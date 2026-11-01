@@ -1,0 +1,627 @@
+# Englische Texte der Vereinswebseite (hubiplan/konzepte/englisch.md, W1).
+# Quelle sind die deutschen Texte; neu sammeln mit scripts/uebersetzung.sh.
+msgid ""
+msgstr ""
+"Project-Id-Version: hubiplan-website\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-01 20:43+0100\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Klassisch"
+msgstr "Classic"
+
+msgid "Festlich"
+msgstr "Festive"
+
+msgid "Seitenleiste"
+msgstr "Sidebar"
+
+msgid "Bühne"
+msgstr "Stage"
+
+msgid "Zeitung"
+msgstr "Newspaper"
+
+msgid "Ämter ·"
+msgstr "Offices ·"
+
+msgid "Ämter"
+msgstr "Offices"
+
+msgid "Zeitraum"
+msgstr "Period"
+
+msgid "Name"
+msgstr "Name"
+
+#, python-format
+msgid "%(von)s bis heute"
+msgstr "%(von)s to date"
+
+#, python-format
+msgid "%(von)s bis %(bis)s"
+msgstr "%(von)s to %(bis)s"
+
+msgid "Aktuelles ·"
+msgstr "News ·"
+
+msgid "Aktuelles"
+msgstr "News"
+
+msgid "Alle"
+msgstr "All"
+
+msgid "Noch keine Beiträge."
+msgstr "No posts yet."
+
+msgid "Barrierefreiheit ·"
+msgstr "Accessibility ·"
+
+msgid "Barrierefreiheit"
+msgstr "Accessibility"
+
+msgid ""
+"Diese Webseite soll für alle gut nutzbar sein, auch mit Tastatur, "
+"Screenreader, Vergrößerung oder großer Schrift. Maßstab sind die Richtlinien"
+" WCAG 2.2, Stufe AA. Als Verein sind wir dazu nicht gesetzlich verpflichtet,"
+" wir bemühen uns aber darum."
+msgstr ""
+"This website is meant to be easy to use for everyone, including with a "
+"keyboard, screen reader, magnification or large text. Our benchmark is the "
+"WCAG 2.2 guidelines, level AA. As a club we are not legally required to meet"
+" them, but we aim to."
+
+msgid "Stand"
+msgstr "Status"
+
+msgid ""
+"Weitgehend erfüllt (Prüfung im Oktober 2026). Die Seite lässt sich "
+"vollständig mit der Tastatur bedienen, Links und Fokus sind deutlich "
+"sichtbar, das Bilderkarussell lässt sich anhalten und hält bei „Bewegung "
+"reduzieren“ von selbst still."
+msgstr ""
+"Largely met (checked in October 2026). The site can be used entirely with "
+"the keyboard, links and focus are clearly visible, and the image carousel "
+"can be paused and stays still on its own when “reduce motion” is set."
+
+msgid "Bekannte Einschränkungen"
+msgstr "Known limitations"
+
+msgid ""
+"Nicht jedes Foto hat schon eine Beschreibung für Screenreader. Wir ergänzen "
+"sie nach und nach."
+msgstr ""
+"Not every photo has a description for screen readers yet. We are adding them"
+" step by step."
+
+msgid ""
+"Dokumente wie die Satzung sind PDF-Dateien, die nicht immer für Screenreader"
+" aufbereitet sind."
+msgstr ""
+"Documents such as the constitution are PDF files that are not always "
+"prepared for screen readers."
+
+msgid ""
+"Beiträge aus Instagram und Facebook übernehmen wir so, wie sie dort "
+"veröffentlicht wurden."
+msgstr ""
+"Posts from Instagram and Facebook are shown as they were published there."
+
+msgid "Barriere melden"
+msgstr "Report a barrier"
+
+msgid "Wenn Ihnen etwas den Zugang erschwert, sagen Sie uns bitte Bescheid:"
+msgstr "If something makes access difficult for you, please let us know:"
+
+msgid "über das"
+msgstr "using the"
+
+msgid "Kontaktformular"
+msgstr "contact form"
+
+msgid "oder"
+msgstr "or"
+
+msgid "per E-Mail an"
+msgstr "by email to"
+
+msgid "über die Angaben im"
+msgstr "using the details in the"
+
+msgid "Impressum"
+msgstr "Legal notice"
+
+msgid "Vereinswebseite"
+msgstr "Club website"
+
+msgid "Zum Inhalt springen"
+msgstr "Skip to content"
+
+msgid "Vorschau: Diese Ansicht sehen nur Sie."
+msgstr "Preview: only you can see this view."
+
+msgid "Die Webseite ist noch nicht öffentlich."
+msgstr "The website is not public yet."
+
+msgid "Vorschau beenden"
+msgstr "End preview"
+
+#, python-format
+msgid ""
+"Design „%(design)s“ – noch nicht übernommen (übernehmen in HUBIplan unter "
+"Webseite › Gestaltung)."
+msgstr ""
+"Design “%(design)s” – not applied yet (apply it in HUBIplan under Website › "
+"Design)."
+
+msgid "Gewähltes Design zeigen"
+msgstr "Show selected design"
+
+msgid "Vorschau beendet. Sie sehen die Webseite jetzt wie alle Besucher."
+msgstr "Preview ended. You now see the website like every visitor."
+
+msgid "Mitglied im"
+msgstr "Member of"
+
+msgid "Social Media"
+msgstr "Social media"
+
+msgid "Datenschutz"
+msgstr "Privacy"
+
+msgid "Quellcode"
+msgstr "Source code"
+
+msgid "Daten aus"
+msgstr "Data from"
+
+msgid "(öffnet in neuem Fenster)"
+msgstr "(opens in a new window)"
+
+msgid "Video"
+msgstr "Video"
+
+msgid "Weiterlesen"
+msgstr "Read more"
+
+#, python-format
+msgid "Video auf %(ort)s ansehen"
+msgstr "Watch video on %(ort)s"
+
+#, python-format
+msgid "Beitrag auf %(ort)s ansehen"
+msgstr "View post on %(ort)s"
+
+msgid "Chronik ·"
+msgstr "Chronicle ·"
+
+msgid "Chronik"
+msgstr "Chronicle"
+
+msgid "Datenschutz ·"
+msgstr "Privacy ·"
+
+msgid "Datenschutzhinweise"
+msgstr "Privacy notice"
+
+msgid ""
+"Der folgende Text steht auf Deutsch; maßgeblich ist die deutsche Fassung."
+msgstr "The following text is in German; the German version is authoritative."
+
+#, python-format
+msgid ""
+"Gespeicherte Fassung, Stand %(zeit)s. Die Seite ist gerade nicht vollständig"
+" erreichbar."
+msgstr "Saved copy as of %(zeit)s. The site is not fully available right now."
+
+msgid "Die Datenschutzhinweise stehen hier:"
+msgstr "The privacy notice is here:"
+
+msgid "Für diese Seite sind noch keine Datenschutzhinweise hinterlegt."
+msgstr "No privacy notice has been added for this site yet."
+
+msgid "Dokumente ·"
+msgstr "Documents ·"
+
+msgid "Dokumente"
+msgstr "Documents"
+
+msgid "öffnet in neuem Fenster"
+msgstr "opens in a new window"
+
+msgid "Ehrungen"
+msgstr "Honours"
+
+msgid "Hier stehen noch keine Angaben."
+msgstr "Nothing here yet."
+
+#, python-format
+msgid "gegründet %(jahr)s"
+msgstr "founded %(jahr)s"
+
+msgid "Kontakt"
+msgstr "Contact"
+
+msgid "Nächste Termine"
+msgstr "Upcoming events"
+
+msgid "Alle Termine"
+msgstr "All events"
+
+msgid "Kalender abonnieren"
+msgstr "Subscribe to calendar"
+
+#, python-format
+msgid "Folgt %(name)s"
+msgstr "Follow %(name)s"
+
+msgid "Zur Startseite"
+msgstr "To the home page"
+
+msgid "Impressum ·"
+msgstr "Legal notice ·"
+
+msgid "Das Impressum steht hier:"
+msgstr "The legal notice is here:"
+
+msgid "Diese Seite wird verantwortet von:"
+msgstr "This site is run by:"
+
+msgid "Vertreten durch"
+msgstr "Represented by"
+
+msgid "E-Mail:"
+msgstr "Email:"
+
+msgid "Telefon:"
+msgstr "Phone:"
+
+msgid "Registereintrag"
+msgstr "Register entry"
+
+msgid "Registergericht:"
+msgstr "Register court:"
+
+msgid "Registernummer:"
+msgstr "Register number:"
+
+msgid "Umsatzsteuer-Identifikationsnummer:"
+msgstr "VAT identification number:"
+
+msgid "Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV"
+msgstr "Responsible for content under § 18 (2) MStV"
+
+msgid "Datenschutzbeauftragte Person"
+msgstr "Data protection officer"
+
+msgid "Für diese Seite ist noch kein Impressum hinterlegt."
+msgstr "No legal notice has been added for this site yet."
+
+msgid "Bilder"
+msgstr "Images"
+
+msgid "Anhalten"
+msgstr "Pause"
+
+msgid "Vorheriges Bild"
+msgstr "Previous image"
+
+msgid "Nächstes Bild"
+msgstr "Next image"
+
+#, python-format
+msgid ""
+"Schreiben Sie uns. Die Nachricht geht per E-Mail an %(name)s; die Antwort "
+"kommt an Ihre E-Mail-Adresse."
+msgstr ""
+"Write to us. Your message is emailed to %(name)s; the reply goes to your "
+"email address."
+
+msgid "Alle Felder sind Pflicht, nur „Kopie an mich senden“ ist freiwillig."
+msgstr "All fields are required; only “Send me a copy” is optional."
+
+msgid "An"
+msgstr "To"
+
+msgid "Ihr Name"
+msgstr "Your name"
+
+msgid "Ihre E-Mail-Adresse"
+msgstr "Your email address"
+
+msgid "Betreff"
+msgstr "Subject"
+
+msgid "Nachricht"
+msgstr "Message"
+
+msgid "Bitte leer lassen"
+msgstr "Please leave empty"
+
+msgid "Kopie an mich senden"
+msgstr "Send me a copy"
+
+msgid "Hinweise zur Verarbeitung Ihrer Angaben stehen in den"
+msgstr "Information on how your details are processed is in the"
+
+msgid "Datenschutzhinweisen"
+msgstr "privacy notice"
+
+msgid "Nachricht senden"
+msgstr "Send message"
+
+msgid ""
+"Zum Senden braucht das Formular JavaScript (Schutz vor Spam); in diesem "
+"Browser ist es gerade nicht verfügbar."
+msgstr ""
+"The form needs JavaScript to send (spam protection); it is not available in "
+"this browser right now."
+
+msgid "Schreiben Sie uns stattdessen gern per E-Mail an"
+msgstr "Feel free to email us instead at"
+
+msgid "Bitte versuchen Sie es mit einem anderen Browser."
+msgstr "Please try a different browser."
+
+msgid "Das Kontaktformular ist gerade nicht verfügbar."
+msgstr "The contact form is not available right now."
+
+msgid "Schreiben Sie uns gern an"
+msgstr "Feel free to write to us at"
+
+msgid "Hauptmenü"
+msgstr "Main menu"
+
+msgid "Menü"
+msgstr "Menu"
+
+msgid "Hauptmenü (Handy)"
+msgstr "Main menu (mobile)"
+
+msgid "Majestäten"
+msgstr "Majesties"
+
+#, python-format
+msgid "seit %(jahr)s"
+msgstr "since %(jahr)s"
+
+msgid "Zurzeit nicht besetzt."
+msgstr "Currently vacant."
+
+msgid "Nachricht schreiben"
+msgstr "Write a message"
+
+msgid "Homepage"
+msgstr "Homepage"
+
+msgid "Zur Homepage"
+msgstr "Visit homepage"
+
+msgid "Neu auf Facebook"
+msgstr "New on Facebook"
+
+msgid "Alle Beiträge"
+msgstr "All posts"
+
+msgid "Unsere Majestäten"
+msgstr "Our majesties"
+
+#, python-format
+msgid "Alle %(name)s"
+msgstr "All %(name)s"
+
+msgid "Alle Majestäten"
+msgstr "All majesties"
+
+msgid "Neu auf Instagram"
+msgstr "New on Instagram"
+
+msgid "fällt aus"
+msgstr "cancelled"
+
+#, python-format
+msgid "Termin von %(name)s"
+msgstr "Event by %(name)s"
+
+msgid "Ort:"
+msgstr "Place:"
+
+msgid "Schließen"
+msgstr "Close"
+
+msgid "bis"
+msgstr "to"
+
+msgid "Termine ·"
+msgstr "Events ·"
+
+msgid "Termine"
+msgstr "Events"
+
+msgid "Termine für"
+msgstr "Events for"
+
+msgid "alle"
+msgstr "all"
+
+msgid "Anzeigen"
+msgstr "Show"
+
+msgid "Zurzeit stehen keine Termine an."
+msgstr "There are no upcoming events at the moment."
+
+msgid "Termine im eigenen Kalender"
+msgstr "Events in your own calendar"
+
+msgid ""
+"Mit dem Kalender-Abo erscheinen alle Termine automatisch in Ihrem Kalender "
+"(Handy, Outlook, Google, Apple) und bleiben aktuell."
+msgstr ""
+"With the calendar subscription, all events appear in your calendar "
+"automatically (phone, Outlook, Google, Apple) and stay up to date."
+
+msgid "Oder diese Adresse im Kalender als Abo hinzufügen:"
+msgstr "Or add this address to your calendar as a subscription:"
+
+msgid "QR-Code für das Kalender-Abo"
+msgstr "QR code for the calendar subscription"
+
+msgid "Vorstand ·"
+msgstr "Board ·"
+
+msgid "Vorstand"
+msgstr "Board"
+
+msgid "Wartung ·"
+msgstr "Maintenance ·"
+
+msgid "Hier entsteht gerade etwas"
+msgstr "Something is being built here"
+
+msgid ""
+"Die Webseite wird gerade vorbereitet oder überarbeitet. Bitte schauen Sie "
+"bald wieder vorbei."
+msgstr "The website is being prepared or revised. Please check back soon."
+
+#, python-format
+msgid "%(n)s. Mal"
+msgstr "time %(n)s"
+
+#, python-format
+msgid "Chronik %(name)s (%(n)s Eintrag)"
+msgid_plural "Chronik %(name)s (%(n)s Einträge)"
+msgstr[0] "Chronicle of %(name)s (%(n)s entry)"
+msgstr[1] "Chronicle of %(name)s (%(n)s entries)"
+
+msgid "Jahr"
+msgstr "Year"
+
+msgid "Begleitung"
+msgstr "Companions"
+
+msgid "Start"
+msgstr "Home"
+
+msgid "Einheiten"
+msgstr "Units"
+
+msgid "Würdenträger"
+msgstr "Title holders"
+
+msgid "Geschichte"
+msgstr "History"
+
+msgid "Bitte Ihren Namen eingeben."
+msgstr "Please enter your name."
+
+msgid "Bitte eine gültige E-Mail-Adresse eingeben, z. B. name@beispiel.de."
+msgstr "Please enter a valid email address, e.g. name@example.org."
+
+msgid "Bitte einen Betreff eingeben."
+msgstr "Please enter a subject."
+
+msgid "Bitte eine Nachricht mit mindestens 10 Zeichen eingeben."
+msgstr "Please enter a message of at least 10 characters."
+
+msgid "Bitte die markierten Felder prüfen."
+msgstr "Please check the marked fields."
+
+msgid "Nachricht wird vorbereitet …"
+msgstr "Preparing message …"
+
+msgid "Nachricht wird gesendet …"
+msgstr "Sending message …"
+
+msgid "Danke! Ihre Nachricht ist angekommen."
+msgstr "Thank you! Your message has arrived."
+
+msgid "Weitere Nachricht"
+msgstr "Another message"
+
+msgid "Die Nachricht konnte nicht gesendet werden."
+msgstr "The message could not be sent."
+
+msgid ""
+"Sicherheitsprüfung erneuert. Ihre Nachricht bleibt erhalten. Bitte senden "
+"Sie erneut."
+msgstr "Security check renewed. Your message is kept. Please send it again."
+
+msgid ""
+"Das Formular ist abgelaufen. Bitte kopieren Sie Ihre Nachricht und laden Sie"
+" die Seite neu."
+msgstr "The form has expired. Please copy your message and reload the page."
+
+msgid ""
+"Diese Nachricht ist bereits bei uns angekommen. Sie müssen sie nicht erneut "
+"senden."
+msgstr ""
+"This message has already reached us. You do not need to send it again."
+
+msgid ""
+"An diese Stelle kann gerade keine Nachricht gehen. Bitte schreiben Sie über "
+"den Menüpunkt „Kontakt“ an den Verein."
+msgstr ""
+"Messages cannot be sent to this recipient right now. Please write to the "
+"club using the “Contact” menu item."
+
+msgid "Bitte die Angaben prüfen."
+msgstr "Please check your details."
+
+msgid "Zu viele Nachrichten. Bitte später erneut versuchen."
+msgstr "Too many messages. Please try again later."
+
+msgid ""
+"Die Nachricht konnte nicht gesendet werden. Bitte später erneut versuchen."
+msgstr "The message could not be sent. Please try again later."
+
+msgid "Weiter abspielen"
+msgstr "Resume"
+
+msgid "Seite nicht gefunden"
+msgstr "Page not found"
+
+msgid "Gerade nicht erreichbar"
+msgstr "Temporarily unavailable"
+
+msgid ""
+"Ein Teil der Seite ist gerade nicht erreichbar. Bitte später erneut "
+"versuchen."
+msgstr "Part of the page is unavailable right now. Please try again later."
+
+msgid "Zu dieser Adresse gibt es keine Webseite."
+msgstr "There is no website at this address."
+
+msgid "Die Seite ist gerade nicht erreichbar. Bitte später erneut versuchen."
+msgstr "The site is unavailable right now. Please try again later."
+
+msgid "Satzung"
+msgstr "Constitution"
+
+msgid "Beitragsordnung"
+msgstr "Fee regulations"
+
+msgid "Gründungsurkunde"
+msgstr "Founding charter"
+
+msgid "Vorschau"
+msgstr "Preview"
+
+msgid "Der Vorschau-Link ist unvollständig."
+msgstr "The preview link is incomplete."
+
+msgid "Bitte später erneut versuchen."
+msgstr "Please try again later."
+
+msgid "Vorschau nicht möglich"
+msgstr "Preview not possible"
+
+msgid ""
+"Der Vorschau-Link ist ungültig oder abgelaufen. Bitte in HUBIplan einen "
+"neuen öffnen."
+msgstr ""
+"The preview link is invalid or has expired. Please open a new one in "
+"HUBIplan."

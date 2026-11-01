@@ -1,18 +1,18 @@
-{% extends "seite/basis.html" %}
-{% block titel %}Barrierefreiheit · {% endblock %}
+{% extends "seite/basis.html" %}{% load i18n %}
+{% block titel %}{% translate "Barrierefreiheit ·" %} {% endblock %}
 {% block inhalt %}
-<h1>Barrierefreiheit</h1>
+<h1>{% translate "Barrierefreiheit" %}</h1>
 <div class="text">
-<p>Diese Webseite soll für alle gut nutzbar sein, auch mit Tastatur, Screenreader, Vergrößerung oder großer Schrift. Maßstab sind die Richtlinien WCAG 2.2, Stufe AA. Als Verein sind wir dazu nicht gesetzlich verpflichtet, wir bemühen uns aber darum.</p>
-<h2>Stand</h2>
-<p>Weitgehend erfüllt (Prüfung im Oktober 2026). Die Seite lässt sich vollständig mit der Tastatur bedienen, Links und Fokus sind deutlich sichtbar, das Bilderkarussell lässt sich anhalten und hält bei „Bewegung reduzieren“ von selbst still.</p>
-<h2>Bekannte Einschränkungen</h2>
+<p>{% translate "Diese Webseite soll für alle gut nutzbar sein, auch mit Tastatur, Screenreader, Vergrößerung oder großer Schrift. Maßstab sind die Richtlinien WCAG 2.2, Stufe AA. Als Verein sind wir dazu nicht gesetzlich verpflichtet, wir bemühen uns aber darum." %}</p>
+<h2>{% translate "Stand" %}</h2>
+<p>{% translate "Weitgehend erfüllt (Prüfung im Oktober 2026). Die Seite lässt sich vollständig mit der Tastatur bedienen, Links und Fokus sind deutlich sichtbar, das Bilderkarussell lässt sich anhalten und hält bei „Bewegung reduzieren“ von selbst still." %}</p>
+<h2>{% translate "Bekannte Einschränkungen" %}</h2>
 <ul>
-  <li>Nicht jedes Foto hat schon eine Beschreibung für Screenreader. Wir ergänzen sie nach und nach.</li>
-  <li>Dokumente wie die Satzung sind PDF-Dateien, die nicht immer für Screenreader aufbereitet sind.</li>
-  <li>Beiträge aus Instagram und Facebook übernehmen wir so, wie sie dort veröffentlicht wurden.</li>
+  <li>{% translate "Nicht jedes Foto hat schon eine Beschreibung für Screenreader. Wir ergänzen sie nach und nach." %}</li>
+  <li>{% translate "Dokumente wie die Satzung sind PDF-Dateien, die nicht immer für Screenreader aufbereitet sind." %}</li>
+  <li>{% translate "Beiträge aus Instagram und Facebook übernehmen wir so, wie sie dort veröffentlicht wurden." %}</li>
 </ul>
-<h2>Barriere melden</h2>
-<p>Wenn Ihnen etwas den Zugang erschwert, sagen Sie uns bitte Bescheid: {% if contact_enabled %}über das <a href="{% url 'kontakt' %}">Kontaktformular</a>{% if site.info.email %} oder {% endif %}{% endif %}{% if site.info.email %}per E-Mail an <a href="mailto:{{ site.info.email }}">{{ site.info.email }}</a>{% endif %}{% if not contact_enabled and not site.info.email %}über die Angaben im <a href="{% url 'impressum' %}">Impressum</a>{% endif %}.</p>
+<h2>{% translate "Barriere melden" %}</h2>
+<p>{% translate "Wenn Ihnen etwas den Zugang erschwert, sagen Sie uns bitte Bescheid:" %} {% if contact_enabled %}{% translate "über das" %} <a href="{% url 'kontakt' %}">{% translate "Kontaktformular" %}</a>{% if site.info.email %} {% translate "oder" %} {% endif %}{% endif %}{% if site.info.email %}{% translate "per E-Mail an" %} <a href="mailto:{{ site.info.email }}">{{ site.info.email }}</a>{% endif %}{% if not contact_enabled and not site.info.email %}{% translate "über die Angaben im" %} <a href="{% url 'impressum' %}">{% translate "Impressum" %}</a>{% endif %}.</p>
 </div>
 {% endblock %}

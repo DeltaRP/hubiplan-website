@@ -39,6 +39,10 @@ und Veröffentlichen.
 - **Kontaktformular**: Der Browser schickt direkt an HUBIplan, Spamschutz ohne Fremddienst
 - **Impressum und Datenschutzhinweise**, auch im Wartungsmodus erreichbar
 - **Wartungsmodus und Vorschau-Link** aus HUBIplan
+- **Sprache je Webseite**: Deutsch (Standard) oder Englisch für alle festen Texte, Menü,
+  Datumsangaben und Meldungen; Vereinsdaten (Namen, Texte, Bezeichnungen) bleiben, wie sie in
+  HUBIplan stehen. Impressum und Datenschutz zeigen auf Englisch einen Hinweis, dass die
+  deutsche Fassung maßgeblich ist.
 - mehrere Gestaltungen, Farben und Wappen des Vereins aus HUBIplan; passt sich an Monitor,
   Tablet und Smartphone an
 
@@ -108,6 +112,12 @@ brauchen kein laufendes HUBIplan. `scripts/test.sh` prüft nur den eingecheckten
 sich dafür einen Testplatz mit `testplatz` (aus
 [hubiplan/scripts/testplatz.sh](https://github.com/hubiplan/hubiplan/blob/main/scripts/testplatz.sh),
 Installation steht im Kopf der Datei). Tests laufen nie auf einem Server.
+
+**Übersetzung:** Feste Texte stehen deutsch in Vorlagen (`{% translate %}`), Python (`_()`)
+und für die Skripte in `JS_TEXTE` (`seite/templatetags/seite.py`). `scripts/uebersetzung.sh`
+sammelt sie in `locale/en/LC_MESSAGES/django.po`; dort die englischen Texte eintragen.
+`tests/test_sprache.py` schlägt fehl, solange ein Text fehlt. Die Sprache einer Webseite
+kommt aus HUBIplan (Feld `language` der Grunddaten, unbekannt = Deutsch).
 
 ## Selbst betreiben
 

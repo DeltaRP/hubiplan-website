@@ -1,9 +1,9 @@
-{% load seite %}<div class="karussell" data-karussell data-takt="{{ takt|default:7 }}"{% if zufall %} data-zufall{% endif %} role="region" aria-roledescription="Karussell" aria-label="Bilder">
+{% load seite i18n %}<div class="karussell" data-karussell data-takt="{{ takt|default:7 }}"{% if zufall %} data-zufall{% endif %} role="region" aria-roledescription="Karussell" aria-label="{% translate "Bilder" %}">
   <div class="karussell-steuerung" hidden>
-    <button type="button" class="knopf-rund knopf-pause" data-pause aria-label="Anhalten" aria-pressed="false">❚❚</button>
-    <button type="button" class="knopf-rund" data-zurueck aria-label="Vorheriges Bild">‹</button>
+    <button type="button" class="knopf-rund knopf-pause" data-pause aria-label="{% translate "Anhalten" %}" aria-pressed="false">❚❚</button>
+    <button type="button" class="knopf-rund" data-zurueck aria-label="{% translate "Vorheriges Bild" %}">‹</button>
     <span class="karussell-zaehler klein" aria-live="polite">1 / {{ bilder|length }}</span>
-    <button type="button" class="knopf-rund" data-weiter aria-label="Nächstes Bild">›</button>
+    <button type="button" class="knopf-rund" data-weiter aria-label="{% translate "Nächstes Bild" %}">›</button>
   </div>
   <ul class="karussell-band" tabindex="0">
   {% for b in bilder %}{% lokal site b.url as bild %}

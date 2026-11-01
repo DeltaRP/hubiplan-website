@@ -1,13 +1,14 @@
-{% extends "seite/basis.html" %}{% load seite %}
-{% block titel %}Datenschutz · {% endblock %}
+{% extends "seite/basis.html" %}{% load seite i18n %}
+{% block titel %}{% translate "Datenschutz ·" %} {% endblock %}
 {% block inhalt %}
-<h1>Datenschutzhinweise</h1>
-{% if stand %}<p class="klein" role="status">Gespeicherte Fassung, Stand {{ stand|date:"j. F Y, H:i" }} Uhr. Die Seite ist gerade nicht vollständig erreichbar.</p>{% endif %}
+<h1>{% translate "Datenschutzhinweise" %}</h1>
+{% get_current_language as sprache %}{% if sprache != "de" %}<p class="klein">{% translate "Der folgende Text steht auf Deutsch; maßgeblich ist die deutsche Fassung." %}</p>{% endif %}
+{% if stand %}<p class="klein" role="status">{% with zeit=stand|datum:"zeit" %}{% blocktranslate %}Gespeicherte Fassung, Stand {{ zeit }}. Die Seite ist gerade nicht vollständig erreichbar.{% endblocktranslate %}{% endwith %}</p>{% endif %}
 {% if privacy.mode == "link" and privacy.url %}
-<p>Die Datenschutzhinweise stehen hier: <a href="{{ privacy.url }}" rel="noopener noreferrer">{{ privacy.url }}</a></p>
+<p>{% translate "Die Datenschutzhinweise stehen hier:" %} <a href="{{ privacy.url }}" rel="noopener noreferrer">{{ privacy.url }}</a></p>
 {% elif privacy.text %}
 <div class="text">{{ privacy.text|md:site }}</div>
 {% else %}
-<p>Für diese Seite sind noch keine Datenschutzhinweise hinterlegt.</p>
+<p>{% translate "Für diese Seite sind noch keine Datenschutzhinweise hinterlegt." %}</p>
 {% endif %}
 {% endblock %}

@@ -19,30 +19,16 @@ from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
-from django.utils import timezone
+from django.utils import formats, timezone, translation
 from django.utils.dateparse import parse_datetime
 from django.utils.safestring import mark_safe
+from django.utils.translation import gettext as _
 from django.views.decorators.http import require_GET
 
 from . import api, archiv
 from .site import DESIGN_COOKIE, DESIGNS, PREVIEW_COOKIE, Site, global_maintenance, host_of, load
 
 log = logging.getLogger(__name__)
-
-MONTHS = [
-    "Januar",
-    "Februar",
-    "März",
-    "April",
-    "Mai",
-    "Juni",
-    "Juli",
-    "August",
-    "September",
-    "Oktober",
-    "November",
-    "Dezember",
-]
 
 
 def _page(request, template: str, site: Site | None, context: dict, status: int = 200):
@@ -66,6 +52,34 @@ def error_page(request, status: int, title: str, text: str, site: Site | None = 
     return _page(request, "seite/fehler.html", site, {"title": title, "text": text}, status)
 
 
+def in_language(site: Site, func, *args, **kwargs):
+    """Seite in der Sprache der Webseite erzeugen (aus HUBIplan, Standard Deutsch). Gilt für
+    die Rahmentexte, nicht für Vereinsdaten."""
+    with translation.override(site.language):
+        response = func(*args, **kwargs)
+    response.setdefault("Content-Language", site.language)
+    return response
+
+
+def _run(view, request, site: Site, maintenance_ok: bool, *args, **kwargs):
+    if site.maintenance and not maintenance_ok:
+        return maintenance_page(request, site)
+    try:
+        return view(request, site, *args, **kwargs)
+    except api.NotFound:
+        return error_page(request, 404, _("Seite nicht gefunden"), "", site)
+    except api.Maintenance:
+        return maintenance_page(request, site)
+    except api.Unavailable:
+        return error_page(
+            request,
+            503,
+            _("Gerade nicht erreichbar"),
+            _("Ein Teil der Seite ist gerade nicht erreichbar. Bitte später erneut versuchen."),
+            site,
+        )
+
+
 def site_view(*, maintenance_ok: bool = False):
     """Lädt die Webseite; zeigt Wartung oder Fehler, wo nötig."""
 
@@ -80,33 +94,19 @@ def site_view(*, maintenance_ok: bool = False):
                 return error_page(
                     request,
                     404,
-                    "Seite nicht gefunden",
-                    "Zu dieser Adresse gibt es keine Webseite.",
+                    _("Seite nicht gefunden"),
+                    _("Zu dieser Adresse gibt es keine Webseite."),
                 )
             except api.Unavailable:
                 return error_page(
                     request,
                     503,
-                    "Gerade nicht erreichbar",
-                    "Die Seite ist gerade nicht erreichbar. Bitte später erneut versuchen.",
+                    _("Gerade nicht erreichbar"),
+                    _("Die Seite ist gerade nicht erreichbar. Bitte später erneut versuchen."),
                 )
-            if site.maintenance and not maintenance_ok:
-                return maintenance_page(request, site)
-            try:
-                return view(request, site, *args, **kwargs)
-            except api.NotFound:
-                return error_page(request, 404, "Seite nicht gefunden", "", site)
-            except api.Maintenance:
-                return maintenance_page(request, site)
-            except api.Unavailable:
-                return error_page(
-                    request,
-                    503,
-                    "Gerade nicht erreichbar",
-                    "Ein Teil der Seite ist gerade nicht erreichbar. Bitte später erneut "
-                    "versuchen.",
-                    site,
-                )
+            # Sprache der Webseite (aus HUBIplan, Standard Deutsch); gilt für alle Texte
+            # der Seite, nicht für Vereinsdaten
+            return in_language(site, _run, view, request, site, maintenance_ok, *args, **kwargs)
 
         return wrapper
 
@@ -188,7 +188,7 @@ def _upcoming(events: list[dict], limit: int | None = None) -> list[dict]:
 def _by_month(events: list[dict]) -> list[tuple[str, list[dict]]]:
     groups: OrderedDict[str, list[dict]] = OrderedDict()
     for e in events:
-        groups.setdefault(f"{MONTHS[e['start'].month - 1]} {e['start'].year}", []).append(e)
+        groups.setdefault(formats.date_format(e["start"], "F Y"), []).append(e)
     return list(groups.items())
 
 
@@ -574,7 +574,7 @@ def documents(request, site: Site):
     if site.info.get("statute_url"):
         docs.append(
             {
-                "title": "Satzung",
+                "title": _("Satzung"),
                 "url": site.info["statute_url"],
                 "kind": "§",
                 # Erste Seite als Bild (ältere HUBIplan-Stände: nur das Symbol)
@@ -584,7 +584,7 @@ def documents(request, site: Site):
     if site.info.get("fee_rules_url"):
         docs.append(
             {
-                "title": "Beitragsordnung",
+                "title": _("Beitragsordnung"),
                 "url": site.info["fee_rules_url"],
                 "kind": "€",
                 "preview": site.local(site.info.get("fee_rules_preview_url")),
@@ -593,7 +593,7 @@ def documents(request, site: Site):
     if site.info.get("founding_deed_url"):
         docs.append(
             {
-                "title": "Gründungsurkunde",
+                "title": _("Gründungsurkunde"),
                 "url": site.info["founding_deed_url"],
                 "kind": "§",
                 "preview": site.local(site.info.get("founding_deed_preview_url")),
@@ -675,7 +675,10 @@ def legal_view(view):
             imprint = site.get("imprint/")
         except api.NotFound:
             return error_page(
-                request, 404, "Seite nicht gefunden", "Zu dieser Adresse gibt es keine Webseite."
+                request,
+                404,
+                _("Seite nicht gefunden"),
+                _("Zu dieser Adresse gibt es keine Webseite."),
             )
         except (api.Unavailable, api.Maintenance):
             snap = archiv.load(host)
@@ -685,8 +688,8 @@ def legal_view(view):
                 return error_page(
                     request,
                     503,
-                    "Gerade nicht erreichbar",
-                    "Die Seite ist gerade nicht erreichbar. Bitte später erneut versuchen.",
+                    _("Gerade nicht erreichbar"),
+                    _("Die Seite ist gerade nicht erreichbar. Bitte später erneut versuchen."),
                 )
             site = Site(key=snap["key"], info=snap["info"], maintenance=True)
             imprint = snap["imprint"]
@@ -697,7 +700,7 @@ def legal_view(view):
         if global_maintenance():
             # Kopf ohne Menü wie auf der Wartungsseite
             site.maintenance = True
-        return view(request, site, imprint, stand)
+        return in_language(site, view, request, site, imprint, stand)
 
     return wrapper
 
@@ -739,20 +742,25 @@ def preview(request):
     """Vorschau-Schlüssel aus HUBIplan gegen ein Vorschau-Cookie tauschen."""
     token = request.GET.get("schluessel", "")
     if not token or len(token) > 500:
-        return error_page(request, 400, "Vorschau", "Der Vorschau-Link ist unvollständig.")
+        return error_page(request, 400, _("Vorschau"), _("Der Vorschau-Link ist unvollständig."))
     try:
         key = api.resolve(_host(request))
         res = api.post(key, "preview/", {"token": token})
     except api.NotFound:
-        return error_page(request, 404, "Seite nicht gefunden", "")
+        return error_page(request, 404, _("Seite nicht gefunden"), "")
     except api.Unavailable:
-        return error_page(request, 503, "Gerade nicht erreichbar", "Bitte später erneut versuchen.")
+        return error_page(
+            request, 503, _("Gerade nicht erreichbar"), _("Bitte später erneut versuchen.")
+        )
     if res.status != 200:
         return error_page(
             request,
             403,
-            "Vorschau nicht möglich",
-            "Der Vorschau-Link ist ungültig oder abgelaufen. Bitte in HUBIplan einen neuen öffnen.",
+            _("Vorschau nicht möglich"),
+            _(
+                "Der Vorschau-Link ist ungültig oder abgelaufen. "
+                "Bitte in HUBIplan einen neuen öffnen."
+            ),
         )
     data = res.json()
     response = HttpResponseRedirect(reverse("start"))

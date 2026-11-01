@@ -1,20 +1,20 @@
-{% now "Y" as dieses_jahr %}{% with ts=e.start|date:"U" %}{% with tid="termin-"|add:e.id|add:"-"|add:ts %}<li class="termin{% if e.is_cancelled %} abgesagt{% endif %}">
+{% load i18n %}{% now "Y" as dieses_jahr %}{% with ts=e.start|date:"U" %}{% with tid="termin-"|add:e.id|add:"-"|add:ts %}<li class="termin{% if e.is_cancelled %} abgesagt{% endif %}">
   <div class="termin-datum" aria-hidden="true"><span>{{ e.start|date:"j" }}</span><small>{{ e.start|date:"M" }}</small>{% if e.start|date:"Y" != dieses_jahr %}<small class="termin-jahr">{{ e.start|date:"Y" }}</small>{% endif %}</div>
   <div class="termin-text">
     {# Die ganze Karte öffnet ein Fenster mit allen Angaben (Ralf 2026-10-31) #}
-    <h3><button type="button" class="termin-knopf" aria-haspopup="dialog" data-termin="{{ tid }}">{{ e.title }}</button>{% if e.is_cancelled %} <span class="marke-abgesagt">fällt aus</span>{% endif %}</h3>
+    <h3><button type="button" class="termin-knopf" aria-haspopup="dialog" data-termin="{{ tid }}">{{ e.title }}</button>{% if e.is_cancelled %} <span class="marke-abgesagt">{% translate "fällt aus" %}</span>{% endif %}</h3>
     {# Das Datum steht schon im Kästchen; vorgelesen wird es hier. #}
     <p class="klein">{% include "seite/termin_zeit.html" %}</p>
-    {% if e.owner %}<p class="klein">Termin von {{ e.owner }}</p>{% endif %}
+    {% if e.owner %}<p class="klein">{% blocktranslate with name=e.owner %}Termin von {{ name }}{% endblocktranslate %}</p>{% endif %}
     {% if e.note %}<p>{{ e.note }}</p>{% endif %}
   </div>
   <dialog id="{{ tid }}" class="termin-fenster" aria-labelledby="{{ tid }}-titel">
-    <h2 id="{{ tid }}-titel">{{ e.title }}{% if e.is_cancelled %} <span class="marke-abgesagt">fällt aus</span>{% endif %}</h2>
+    <h2 id="{{ tid }}-titel">{{ e.title }}{% if e.is_cancelled %} <span class="marke-abgesagt">{% translate "fällt aus" %}</span>{% endif %}</h2>
     <p>{% include "seite/termin_zeit.html" with lang=True %}</p>
-    {% if e.owner %}<p class="klein">Termin von {{ e.owner }}</p>{% endif %}
+    {% if e.owner %}<p class="klein">{% blocktranslate with name=e.owner %}Termin von {{ name }}{% endblocktranslate %}</p>{% endif %}
     {% if e.note %}<p>{{ e.note }}</p>{% endif %}
-    {% if e.location or e.address %}<p><strong>Ort:</strong> {{ e.location }}{% if e.location and e.address %}, {% endif %}{% if e.address %}<a href="https://www.openstreetmap.org/search?query={{ e.address|urlencode }}" rel="noopener">{{ e.address }}</a>{% endif %}</p>{% endif %}
+    {% if e.location or e.address %}<p><strong>{% translate "Ort:" %}</strong> {{ e.location }}{% if e.location and e.address %}, {% endif %}{% if e.address %}<a href="https://www.openstreetmap.org/search?query={{ e.address|urlencode }}" rel="noopener">{{ e.address }}</a>{% endif %}</p>{% endif %}
     {% if e.description %}<p>{{ e.description|linebreaksbr }}</p>{% endif %}
-    <form method="dialog"><button class="knopf" type="submit">Schließen</button></form>
+    <form method="dialog"><button class="knopf" type="submit">{% translate "Schließen" %}</button></form>
   </dialog>
 </li>{% endwith %}{% endwith %}

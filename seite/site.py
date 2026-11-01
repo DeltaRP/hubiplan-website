@@ -13,6 +13,7 @@ from pathlib import Path
 
 from django.conf import settings
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 
 from . import api
 
@@ -30,13 +31,15 @@ DEFAULT_THEME = {
 
 # Standarddesigns (Auswahl in HUBIplan unter Webseite › Gestaltung); unbekannt = Klassisch
 DESIGNS = {
-    "classic": "Klassisch",
-    "festive": "Festlich",
-    "sidebar": "Seitenleiste",
-    "stage": "Bühne",
-    "newspaper": "Zeitung",
+    "classic": _("Klassisch"),
+    "festive": _("Festlich"),
+    "sidebar": _("Seitenleiste"),
+    "stage": _("Bühne"),
+    "newspaper": _("Zeitung"),
 }
 DEFAULT_DESIGN = "classic"
+# Sprachen der Webseite (Vereinsdaten werden nicht übersetzt)
+LANGUAGES = ("de", "en")
 COLOR_ROLES = ("header", "nav", "line", "footer", "band", "band2", "date")
 DARK = "#1d2421"
 
@@ -111,6 +114,12 @@ class Site:
         chronik = self.block("history") and info.get("has_history_text", True)
         aemter = self.block("offices") and info.get("has_offices", True)
         return bool(chronik), bool(aemter)
+
+    @property
+    def language(self) -> str:
+        """Sprache der Rahmentexte (aus HUBIplan ``language``); unbekannt = Deutsch."""
+        lang = str(self.info.get("language") or "").strip().lower()[:2]
+        return lang if lang in LANGUAGES else "de"
 
     @property
     def is_preview(self) -> bool:
