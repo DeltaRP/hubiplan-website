@@ -1,16 +1,16 @@
-{% if c.live %}<p class="zustand-zeile"><span class="zustand live">live</span> Der Wettbewerb läuft, die Ergebnisse sind vorläufig.</p>{% elif c.provisional %}<p class="zustand-zeile"><span class="zustand">vorläufig</span> Die Ergebnisse sind noch nicht endgültig.</p>{% endif %}
+{% load i18n %}{% if c.live %}<p class="zustand-zeile"><span class="zustand live">{% translate "live" %}</span> {% translate "Der Wettbewerb läuft, die Ergebnisse sind vorläufig." %}</p>{% elif c.provisional %}<p class="zustand-zeile"><span class="zustand">{% translate "vorläufig" %}</span> {% translate "Die Ergebnisse sind noch nicht endgültig." %}</p>{% endif %}
 {% if c.titles %}
 <section>
-  <h2>Titel</h2>
+  <h2>{% translate "Titel" %}</h2>
   <ul class="titel">{% for t in c.titles %}<li><strong>{{ t.title }}:</strong> {{ t.name }}</li>{% endfor %}</ul>
 </section>
 {% endif %}
 {% if c.prizes %}
 <section>
-  <h2>Preise</h2>
+  <h2>{% translate "Preise" %}</h2>
   <table>
-    <thead><tr><th scope="col">Preis</th><th scope="col">Errungen von</th></tr></thead>
-    <tbody>{% for p in c.prizes %}<tr><td>{{ p.name }}</td><td>{% if p.fallen %}{{ p.winner|default:"" }}{% if p.unit %}{% if p.winner %} ({{ p.unit }}){% else %}{{ p.unit }}{% endif %}{% endif %}{% if p.shot %} <span class="klein">mit dem {{ p.shot }}. Schuss</span>{% endif %}{% else %}<span class="klein">noch offen</span>{% endif %}</td></tr>{% endfor %}</tbody>
+    <thead><tr><th scope="col">{% translate "Preis" %}</th><th scope="col">{% translate "Errungen von" %}</th></tr></thead>
+    <tbody>{% for p in c.prizes %}<tr><td>{{ p.name }}</td><td>{% if p.fallen %}{{ p.winner|default:"" }}{% if p.unit %}{% if p.winner %} ({{ p.unit }}){% else %}{{ p.unit }}{% endif %}{% endif %}{% if p.shot %} <span class="klein">{% blocktranslate with n=p.shot %}mit dem {{ n }}. Schuss{% endblocktranslate %}</span>{% endif %}{% else %}<span class="klein">{% translate "noch offen" %}</span>{% endif %}</td></tr>{% endfor %}</tbody>
   </table>
 </section>
 {% endif %}
@@ -19,11 +19,11 @@
   <h2>{{ s.name }}</h2>
   {% if s.rows %}
   <table class="rangliste">
-    <thead><tr><th scope="col">Platz</th><th scope="col">{% if s.kind == "einheit" %}{{ site.info.unit_label|default:"Einheit" }}{% elif s.kind == "mannschaft" %}Mannschaft{% else %}Name{% endif %}</th><th scope="col" class="zahl">Ergebnis</th></tr></thead>
-    <tbody>{% for r in s.rows %}<tr><td>{% if r.place %}{{ r.place }}.{% endif %}</td><td>{{ r.name }}{% if r.club %} <span class="klein">({{ r.club }})</span>{% elif r.unit %} <span class="klein">({{ r.unit }})</span>{% endif %}{% if r.out_of_competition %} <span class="klein">außer Konkurrenz</span>{% endif %}{% if r.members %}<br><span class="klein">{{ r.members|join:", " }}</span>{% endif %}{% if r.note %}<br><span class="klein">{{ r.note }}</span>{% endif %}</td><td class="zahl">{{ r.value }}</td></tr>{% endfor %}</tbody>
+    <thead><tr><th scope="col">{% translate "Platz" %}</th><th scope="col">{% if s.kind == "einheit" %}{% if site.info.unit_label %}{{ site.info.unit_label }}{% else %}{% translate "Einheit" %}{% endif %}{% elif s.kind == "mannschaft" %}{% translate "Mannschaft" %}{% else %}{% translate "Name" %}{% endif %}</th><th scope="col" class="zahl">{% translate "Ergebnis" %}</th></tr></thead>
+    <tbody>{% for r in s.rows %}<tr><td>{% if r.place %}{{ r.place }}.{% endif %}</td><td>{{ r.name }}{% if r.club %} <span class="klein">({{ r.club }})</span>{% elif r.unit %} <span class="klein">({{ r.unit }})</span>{% endif %}{% if r.out_of_competition %} <span class="klein">{% translate "außer Konkurrenz" %}</span>{% endif %}{% if r.members %}<br><span class="klein">{{ r.members|join:", " }}</span>{% endif %}{% if r.note %}<br><span class="klein">{{ r.note }}</span>{% endif %}</td><td class="zahl">{{ r.value }}</td></tr>{% endfor %}</tbody>
   </table>
-  {% if not s.complete and s.field %}<p class="klein">Gezeigt sind die Plätze 1 bis 3 von {{ s.field }} Teilnehmenden.</p>{% endif %}
-  {% else %}<p class="klein">Noch keine Ergebnisse.</p>{% endif %}
+  {% if not s.complete and s.field %}<p class="klein">{% blocktranslate with n=s.field %}Gezeigt sind die Plätze 1 bis 3 von {{ n }} Teilnehmenden.{% endblocktranslate %}</p>{% endif %}
+  {% else %}<p class="klein">{% translate "Noch keine Ergebnisse." %}</p>{% endif %}
 </section>
-{% empty %}{% if not c.prizes and not c.titles %}<p>Noch keine Ergebnisse.</p>{% endif %}
+{% empty %}{% if not c.prizes and not c.titles %}<p>{% translate "Noch keine Ergebnisse." %}</p>{% endif %}
 {% endfor %}

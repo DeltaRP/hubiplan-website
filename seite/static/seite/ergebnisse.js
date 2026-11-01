@@ -3,6 +3,12 @@
 // einer Änderung neu. Ohne JavaScript bleibt der Link „Aktualisieren“.
 (function () {
   "use strict";
+  // Texte in der Sprache der Seite (basis.html, Element seite-texte)
+  function t(s) {
+    var e = document.getElementById("seite-texte");
+    if (!e) return s;
+    try { return JSON.parse(e.textContent)[s] || s; } catch (x) { return s; }
+  }
   var box = document.getElementById("ergebnis");
   if (!box || !box.dataset.stand || !window.fetch) return;
   var hinweis = document.getElementById("ergebnis-hinweis");
@@ -21,11 +27,9 @@
     if (!res.ok) throw new Error("Tabelle " + res.status);
     box.innerHTML = await res.text();
     var jetzt = new Date();
-    melde(
-      "Aktualisiert um " +
-        jetzt.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) +
-        " Uhr."
-    );
+    var sprache = document.documentElement.lang === "en" ? "en-GB" : "de-DE";
+    var zeit = jetzt.toLocaleTimeString(sprache, { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    melde(t("Aktualisiert um {zeit} Uhr.").replace("{zeit}", zeit));
   }
 
   async function pruefe() {
@@ -42,7 +46,7 @@
       fehler = 0;
       if (stand.final) {
         fertig = true;
-        melde("Die Ergebnisse sind endgültig.");
+        melde(t("Die Ergebnisse sind endgültig."));
         return;
       }
     } catch (e) {
