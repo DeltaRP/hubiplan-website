@@ -349,3 +349,16 @@ figcaption { font-size: .88rem; color: var(--text-leise); margin-top: .3rem; }
 .beitrag-text { overflow-wrap: anywhere; }
 .beitrag-mehr summary { cursor: pointer; color: var(--link); font-weight: 600; }
 .auswahl a[aria-current="page"] { font-weight: 700; }
+
+/* Wettbewerbsergebnisse */
+.ergebnisliste { list-style: none; padding: 0; margin: 0 0 1rem; }
+.ergebnisliste li { padding: .45rem 0; border-bottom: 1px solid var(--linie); }
+.rangliste td:first-child { width: 4rem; white-space: nowrap; }
+.rangliste .zahl { text-align: right; white-space: nowrap; }
+.zustand {
+  display: inline-block; font-size: .8rem; font-weight: 600; padding: .05rem .5rem;
+  border-radius: 999px; border: 1px solid var(--linie); color: var(--text-leise);
+}
+.zustand.live { background: #b3261e; border-color: #b3261e; color: #ffffff; }
+.zustand-zeile { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+.titel { padding-left: 1.2rem; }

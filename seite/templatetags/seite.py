@@ -91,6 +91,7 @@ NAV_URLS = {
     "history": "chronik",
     "offices": "aemter",
     "honorary": "ehrungen",
+    "results": "ergebnisse",
     "statutes": "dokumente",
     "contact": "kontakt",
 }

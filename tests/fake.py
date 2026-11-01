@@ -197,6 +197,106 @@ HONORS = {
 }
 
 
+COMP = "c" * 20
+LIVE = "1" * 20
+SERIES = "5" * 20
+
+
+def _comp(token: str, title: str, *, live: bool = False) -> dict:
+    return {
+        "id": token,
+        "title": title,
+        "date": "2027-06-14",
+        "year": 2027,
+        "occasion": "",
+        "discipline": "Luftgewehr",
+        "location": "Schießstand",
+        "own": True,
+        "organizer": "",
+        "status": "laeuft" if live else "endgueltig",
+        "live": live,
+        "provisional": False,
+        "final": not live,
+        "url": f"{BASE}results/{token}/",
+    }
+
+
+def results_detail(token: str, version: str = "v1") -> dict:
+    live = token == LIVE
+    return {
+        **_comp(token, "Pokalschießen" if live else "Vereinsmeisterschaft 2027", live=live),
+        "description": "",
+        "details": "",
+        "depth": "alle",
+        "scorings": [
+            {
+                "name": "Einzel",
+                "kind": "einzel",
+                "field": 4,
+                "complete": True,
+                "rows": [
+                    {"place": 1, "value": "30", "prize": False, "name": "Max M.", "unit": "Zug 1"},
+                    {"place": 2, "value": "28", "prize": False, "name": "ohne Namen", "unit": ""},
+                    {
+                        "place": 3,
+                        "value": "20",
+                        "prize": False,
+                        "name": "Gerd G.",
+                        "unit": "",
+                        "club": "Nachbarverein",
+                    },
+                ],
+            }
+        ],
+        "prizes": [],
+        "titles": [] if live else [{"title": "Vereinsmeister 2027", "name": "Max M."}],
+        "version": version,
+        "poll_seconds": 15 if live else None,
+        "version_url": f"{BASE}results/{token}/version/",
+    }
+
+
+def results_overview() -> dict:
+    return {
+        "competitions": [
+            _comp(LIVE, "Pokalschießen", live=True),
+            _comp(COMP, "Vereinsmeisterschaft 2027"),
+        ],
+        "series": [
+            {"id": SERIES, "name": "Vereinsmeisterschaft", "url": f"{BASE}results/series/{SERIES}/"}
+        ],
+        "trophies": [
+            {
+                "name": "Zugpokal",
+                "description": "",
+                "holders": [{"year": 2026, "name": "Zug 1", "kept": False}],
+            }
+        ],
+        "poll_seconds": 15,
+    }
+
+
+def results_series() -> dict:
+    return {
+        "id": SERIES,
+        "name": "Vereinsmeisterschaft",
+        "description": "Jedes Jahr im Juni.",
+        "years": [
+            {
+                "year": 2027,
+                "title": "Vereinsmeisterschaft 2027",
+                "url": f"{BASE}results/{COMP}/",
+                "winners": [{"scoring": "Einzel", "names": ["Max M."], "value": "30"}],
+                "depth": "alle",
+            }
+        ],
+        "titles": [
+            {"year": 2027, "title": "Vereinsmeister 2027", "name": "Max M."},
+            {"year": 1999, "title": "Vereinsmeister 1999", "name": "Karl F."},
+        ],
+    }
+
+
 def events(future: str = "2099-06-01T18:00:00+02:00") -> dict:
     return {
         "ics_url": BASE + "events.ics",
@@ -276,6 +376,8 @@ class FakeHubiplan:
     posts: list = field(default_factory=list)
     bases: list = field(default_factory=list)
     hosts: dict = field(default_factory=lambda: {"testserver": KEY, "www.musterdorf.test": KEY})
+    # Stand je Wettbewerb (Wettbewerbsergebnisse live)
+    versions: dict = field(default_factory=dict)
 
     def __call__(self, method, path, *, data=None, preview=None, base=None):
         self.calls.append((method, path, preview))
@@ -418,8 +520,42 @@ class FakeHubiplan:
             return self.json({"posts": items})
         if base == "events/":
             return self.json(events())
+        if base.startswith("results/"):
+            return self.results(base, rest)
         if base in table:
             return self.json(table[base])
+        return self.json({"detail": "nicht gefunden"}, 404)
+
+    def results(self, base: str, rest: str):
+        if not self.info.get("results_url"):
+            return self.json({"detail": "nicht gefunden"}, 404)
+        if base == "results/":
+            if "start=1" in rest:
+                d = results_detail(COMP)
+                return self.json(
+                    {
+                        "competitions": [
+                            {
+                                **_comp(COMP, d["title"]),
+                                "scorings": [
+                                    {"scoring": "Einzel", "rows": d["scorings"][0]["rows"]}
+                                ],
+                                "prizes": [],
+                                "version": "v1",
+                            }
+                        ],
+                        "poll_seconds": 15,
+                    }
+                )
+            return self.json(results_overview())
+        if base == f"results/series/{SERIES}/":
+            return self.json(results_series())
+        for token in (COMP, LIVE):
+            version = self.versions.get(token, "v1")
+            if base == f"results/{token}/version/":
+                return self.json({"version": version, "status": "", "final": token == COMP})
+            if base == f"results/{token}/":
+                return self.json(results_detail(token, version))
         return self.json({"detail": "nicht gefunden"}, 404)
 
     @staticmethod

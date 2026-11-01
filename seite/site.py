@@ -87,10 +87,10 @@ class Site:
 
     # --- Daten ---
 
-    def get(self, path: str, *, cached: bool = True):
+    def get(self, path: str, *, cached: bool = True, seconds: int | None = None):
         if (path, cached) not in self.cache:
             self.cache[(path, cached)] = api.get(
-                self.key, path, preview=self.preview, cached=cached
+                self.key, path, preview=self.preview, cached=cached, seconds=seconds
             )
         return self.cache[(path, cached)]
 
