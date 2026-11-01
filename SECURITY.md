@@ -4,7 +4,7 @@ Die HUBIplan-Website zeigt öffentliche Daten aus HUBIplan, einer Vereinsverwalt
 personenbezogenen Daten. Hinweise auf Sicherheitslücken nehmen wir deshalb sehr ernst und sind
 für jede Meldung dankbar.
 
-*Reports in English are welcome.*
+*Reports in English are welcome; see the [English summary](#english-summary) at the end.*
 
 ## Lücke melden
 
@@ -36,13 +36,17 @@ Korrekturen gibt es für den aktuellen Stand von `main`.
 ## Umfang
 
 Gemeint ist der Code in diesem Repository: Darstellung, Vorlagen, Abruf der Schnittstelle,
-Medien-Weiterleitung, Vorschau und Wartungsmodus sowie die Skripte und Vorlagen fürs
-Ausrollen. Besonders interessant sind:
+Medien-Weiterleitung, Kontaktformular, Ergebnisseiten, Vorschau und Wartungsmodus sowie die
+Skripte und Vorlagen fürs Ausrollen. Besonders interessant sind:
 
 - Cross-Site-Scripting oder eingeschleuste Inhalte über Texte und Daten aus HUBIplan,
 - Zugriff auf Seiten im Wartungsmodus oder auf Vorschauen ohne gültigen Vorschau-Link,
 - Abrufe über `/medien/…`, die mehr als Bilder und Logos aus HUBIplan erreichen,
-- Daten eines anderen Vereins auf einer Webseite (Zuordnung über den Hostnamen).
+- Daten eines anderen Vereins auf einer Webseite (Zuordnung über den Hostnamen),
+- Umgehung des Spamschutzes im Kontaktformular oder Missbrauch des Formulars zum Versand an
+  beliebige Empfänger,
+- Inhalte, die nur in der Vorschau oder im Wartungsmodus sichtbar sein dürften, in Caches
+  oder über die Live-Abfrage der Ergebnisseiten.
 
 Zeigt die Webseite Daten, die HUBIplan gar nicht hätte herausgeben dürfen, liegt der Fehler
 meist in HUBIplan; dann bitte [dort melden](https://github.com/hubiplan/hubiplan/security/advisories/new).
@@ -62,3 +66,15 @@ Header ohne Angriffsweg).
 
 Wer sich an diese Regeln hält und in gutem Glauben handelt, hat von uns keine rechtlichen
 Schritte zu erwarten.
+
+## English summary
+
+Please do **not** open a public issue. Report vulnerabilities privately via
+[GitHub private vulnerability reporting](https://github.com/hubiplan/hubiplan-website/security/advisories/new).
+If the website shows data that HUBIplan should never have published, the bug is most likely
+in [HUBIplan](https://github.com/hubiplan/hubiplan/security/advisories/new). We usually
+acknowledge reports within 7 days and ask you to keep details private until a fix is
+available, for at most 90 days. Fixes are made on `main`; there are no release branches.
+Test only against your own installation with made-up data, never against other clubs'
+websites or real data. Good-faith research that follows these rules will not face legal
+action from us.

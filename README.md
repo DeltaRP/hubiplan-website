@@ -10,8 +10,9 @@ und Veröffentlichen.
 
 > **English:** HUBIplan-Website renders public club websites from the public API of
 > [HUBIplan](https://github.com/hubiplan/hubiplan), a free membership management system. It is
-> a stateless Django app without a database. The user interface and documentation are in
-> German; issues and security reports in English are welcome.
+> a stateless Django app without a database. Each website can show its fixed texts in
+> German or English; club content stays as entered in HUBIplan. The developer documentation
+> is in German; issues and security reports in English are welcome.
 
 ## Inhalt
 
@@ -26,18 +27,23 @@ und Veröffentlichen.
 
 ## Funktionen
 
-- **Startseite aus Bausteinen**, die HUBIplan ein- und ausschaltet und ordnet: Begrüßung,
-  Bilderkarussell, nächste Termine, Geburtstage, aktuelle Würdenträger, Untereinheiten
+- **Startseite aus Bausteinen**, die HUBIplan ein- und ausschaltet, ordnet und auf Wunsch
+  umbenennt (eigener Name in Menü, Überschrift und Seitentitel): Begrüßung,
+  Bilderkarussell (Wechselzeit und Startbild aus HUBIplan), nächste Termine, Geburtstage,
+  aktuelle Würdenträger, aktuelle Ergebnisse, Untereinheiten
 - **Aktuelles**: eigene Beiträge des Vereins von Instagram und Facebook
 - **Vorstand und Ansprechpartner** mit Funktionsadressen und Ehrungen
 - **Untereinheiten** (z. B. Abteilungen oder Züge) mit eigenen Unterseiten; der Pfad folgt
   der Bezeichnung in HUBIplan
 - **Terminkalender** nach Monaten, Filter je Untereinheit, Kalender-Abo fürs Smartphone mit
   QR-Code
-- **Würden** mit aktuellen Trägern und Chronik, **Geschichte** mit Chronik und Ämtern,
-  Satzung, Dokumente und weitere Textseiten
+- **Würden** mit aktuellen Trägern und Chronik, **Ehrungen**, **Geschichte** mit Chronik und
+  Ämtern, Satzung, Dokumente und weitere Textseiten
+- **Ergebnisse** der Wettbewerbe (wenn der Verein das Modul nutzt): Ranglisten, Reihen und
+  Wanderpokale; laufende Wettbewerbe aktualisieren sich von selbst
 - **Kontaktformular**: Der Browser schickt direkt an HUBIplan, Spamschutz ohne Fremddienst
-- **Impressum und Datenschutzhinweise**, auch im Wartungsmodus erreichbar
+- **Impressum, Datenschutzhinweise und Erklärung zur Barrierefreiheit**, auch im
+  Wartungsmodus erreichbar
 - **Wartungsmodus und Vorschau-Link** aus HUBIplan
 - **Sprache je Webseite**: Deutsch (Standard) oder Englisch für alle festen Texte, Menü,
   Datumsangaben und Meldungen; Vereinsdaten (Namen, Texte, Bezeichnungen) bleiben, wie sie in
@@ -76,9 +82,10 @@ damit der Browser keine zweite Adresse braucht. Konzept: [docs/konzept.md](docs/
 ```text
 config/           Einstellungen (nur Umgebungsvariablen), URLs
 seite/            Abruf der Schnittstelle, Ansichten, Vorlagen, CSS
+locale/           englische Rahmentexte (django.po)
 tests/            pytest mit nachgebildeter Schnittstelle (tests/fake.py)
 deploy/           Ausrollen, Servereinrichtung, HestiaCP-Vorlagen
-scripts/test.sh   vollständiger Test
+scripts/          test.sh (vollständiger Test), uebersetzung.sh (Texte sammeln)
 docs/             Konzept, Betrieb und Lizenzen
 ```
 
