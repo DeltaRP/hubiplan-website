@@ -311,19 +311,26 @@ figcaption { font-size: .88rem; color: var(--text-leise); margin-top: .3rem; }
 /* Nur für Screenreader (z. B. Überschrift der Startseite, der Name steht im Kopf) */
 .nur-vorlesen { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
-/* Bilderkarussell der Begrüßung: Band mit Einrasten, Knöpfe nur mit Skript */
-.karussell { margin: 0 0 1rem; }
+/* Bilderkarussell: Band mit Einrasten; Knöpfe nur mit Skript, im Bild und nur sichtbar bei
+   Maus darüber, Tastaturfokus oder nach Antippen (Klasse .zeigen, setzt karussell.js) */
+.karussell { --karussell-hoehe: min(28rem, 60vh); position: relative; margin: 0 0 1rem; }
 .karussell-band { list-style: none; margin: 0; padding: 0; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; border-radius: var(--rund); }
 .karussell-band::-webkit-scrollbar { display: none; }
 .karussell-band:focus-visible { outline: 3px solid var(--link); outline-offset: 3px; }
 .karussell-bild { flex: 0 0 100%; scroll-snap-align: start; }
 .karussell-bild .titelbild { margin: 0; }
-.karussell-bild img { display: block; height: 28rem; max-height: 60vh; }
-.karussell-steuerung { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: .6rem; }
-/* Steuerung steht im Quelltext vor den Bildern (zuerst erreichbar), sichtbar darunter */
-.karussell { display: flex; flex-direction: column; }
-.karussell-steuerung { order: 2; }
+.karussell-bild img { display: block; height: var(--karussell-hoehe); max-height: none; }
+/* Steuerung steht im Quelltext vor den Bildern (zuerst erreichbar), liegt sichtbar auf dem Bild */
+.karussell-steuerung { position: absolute; inset: 0 0 auto; height: var(--karussell-hoehe); z-index: 2; pointer-events: none; opacity: 0; transition: opacity .2s; }
 .karussell-steuerung[hidden] { display: none; }
+.karussell:hover .karussell-steuerung, .karussell:focus-within .karussell-steuerung, .karussell.zeigen .karussell-steuerung { opacity: 1; }
+.karussell:hover .karussell-steuerung > *, .karussell:focus-within .karussell-steuerung > *, .karussell.zeigen .karussell-steuerung > * { pointer-events: auto; }
+.karussell-steuerung .knopf-rund { position: absolute; background: rgb(255 255 255 / .88); color: #222; border-color: transparent; box-shadow: 0 1px 6px rgb(0 0 0 / .35); }
+.karussell-steuerung [data-zurueck] { left: .75rem; top: 50%; transform: translateY(-50%); }
+.karussell-steuerung [data-weiter] { right: .75rem; top: 50%; transform: translateY(-50%); }
+.karussell-steuerung [data-pause] { right: .75rem; bottom: .75rem; }
+.karussell-zaehler { position: absolute; right: 3.7rem; bottom: 1.1rem; background: rgb(0 0 0 / .55); color: #fff; padding: .1rem .5rem; border-radius: 99px; }
+@media (prefers-reduced-motion: reduce) { .karussell-steuerung { transition: none; } }
 .knopf-rund { width: 2.4rem; height: 2.4rem; border-radius: 50%; border: 1px solid var(--linie); background: var(--flaeche); color: var(--text); font-size: 1.4rem; line-height: 1; cursor: pointer; }
 .knopf-rund:hover:not(:disabled) { border-color: var(--primaer); }
 .knopf-rund:disabled { opacity: .35; cursor: default; }

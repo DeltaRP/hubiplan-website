@@ -8,7 +8,7 @@
   </div>
 </div>
 {% if unit.gallery|length > 1 %}
-{% include "seite/karussell.html" with bilder=unit.gallery %}
+{% include "seite/karussell.html" with bilder=unit.gallery takt=unit.gallery_interval zufall=unit.gallery_random %}
 {% else %}
 {% lokal site unit.image.url as bild %}
 {% if bild %}<figure class="titelbild"><img src="{{ bild }}" alt="{{ unit.image.alt }}">{% if unit.image.caption %}<figcaption>{{ unit.image.caption }}</figcaption>{% endif %}</figure>{% endif %}

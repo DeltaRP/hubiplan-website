@@ -576,6 +576,34 @@ def test_bilderkarussell(client, hubiplan):
     assert html.count('src="/medien/a/images/festbild1/"') == 2
     assert 'alt="Zelt"' in html and 'aria-label="2 von 2"' in html
     assert "karussell.js" in html
+    assert 'data-takt="7"' in html  # ältere HUBIplan-Fassung ohne Angabe: Standard
+
+
+def test_bilderkarussell_wechselzeit(client, hubiplan):
+    bild = {
+        "key": "festbild1",
+        "url": f"https://hubiplan.example/api/public/site/v1/{KEY}/images/festbild1/",
+        "small_url": "",
+        "width": 800,
+        "height": 400,
+        "caption": "",
+        "alt": "Festzug",
+    }
+    hubiplan.info["greeting"] = {
+        "title": "Willkommen",
+        "text": "",
+        "image": None,
+        "gallery": [bild, bild],
+        "gallery_interval": 12,
+    }
+    html = text(client.get("/"))
+    assert 'data-takt="12"' in html and "data-zufall" not in html
+    hubiplan.info["units"][0]["gallery"] = [bild, bild]
+    hubiplan.info["units"][0]["gallery_interval"] = 4
+    hubiplan.info["units"][0]["gallery_random"] = True
+    cache.clear()
+    html = text(client.get("/zuege/jaeger/"))
+    assert 'data-takt="4"' in html and "data-zufall" in html
 
 
 def test_ein_bild_ohne_karussell(client, hubiplan):
