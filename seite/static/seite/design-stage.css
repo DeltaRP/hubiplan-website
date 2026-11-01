@@ -16,9 +16,11 @@ body { overflow-x: clip; }
 .buehne { position: relative; margin: -1.5rem calc(50% - 50vw) 0; background: var(--farbe-band); color: var(--auf-band); min-height: 12rem; }
 .buehne .karussell, .buehne .titelbild { margin: 0; }
 .buehne .karussell-band, .buehne .titelbild img { border-radius: 0; }
-.buehne .karussell-bild img { height: 34rem; max-height: 70vh; width: 100%; object-fit: cover; }
-.buehne .karussell-steuerung { position: absolute; right: 16px; top: 1rem; z-index: 2; margin: 0; }
-.buehne .karussell-zaehler { background: rgb(0 0 0 / .55); color: #fff; padding: .1rem .5rem; border-radius: 99px; }
+.buehne .karussell { --karussell-hoehe: min(34rem, 70vh); }
+.buehne .karussell-bild img { width: 100%; object-fit: cover; }
+/* Unten liegt der Name: Pause und Zähler oben rechts */
+.buehne .karussell-steuerung [data-pause] { top: .75rem; bottom: auto; right: 16px; }
+.buehne .karussell-zaehler { top: 1.1rem; bottom: auto; right: calc(16px + 2.95rem); }
 .buehne-name {
   margin: 0; padding: 3rem max(16px, calc(50vw - 31rem)) 2rem;
   font-size: clamp(1.5rem, 4.5vw, 2.6rem); font-weight: 700; line-height: 1.15;

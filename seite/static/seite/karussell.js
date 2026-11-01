@@ -1,8 +1,11 @@
-// Bilderkarussell der Startseite: wechselt ruhig von selbst (alle 7 Sekunden,
-// danach wieder von vorn), hält beim Darüberfahren, beim Fokus und auf
-// Knopfdruck an. Bei „Bewegung reduzieren“ startet es angehalten. Ohne Skript
-// lässt sich das Band seitlich wischen bzw. scrollen.
-const TAKT = 7000
+// Bilderkarussell: wechselt ruhig von selbst (Zeit je Karussell aus HUBIplan,
+// data-takt in Sekunden, sonst 7), danach wieder von vorn. Hält beim
+// Darüberfahren, beim Fokus und auf Knopfdruck an. Bei „Bewegung reduzieren“
+// startet es angehalten. Die Knöpfe liegen im Bild und erscheinen bei Maus,
+// Tastaturfokus oder nach Antippen. Ohne Skript lässt sich das Band seitlich
+// wischen bzw. scrollen. Auf Wunsch beginnt es mit einem zufälligen Bild (data-zufall).
+const STANDARD = 7
+const ANTIPPEN = 4000 // so lange bleiben die Knöpfe nach dem Antippen sichtbar
 
 document.querySelectorAll('[data-karussell]').forEach((box) => {
   const band = box.querySelector('.karussell-band')
@@ -11,6 +14,8 @@ document.querySelectorAll('[data-karussell]').forEach((box) => {
   const zurueck = box.querySelector('[data-zurueck]')
   const weiter = box.querySelector('[data-weiter]')
   const pause = box.querySelector('[data-pause]')
+  const sekunden = Number(box.dataset.takt)
+  const takt = (sekunden >= 3 && sekunden <= 30 ? sekunden : STANDARD) * 1000
   const ruhig = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   box.querySelector('.karussell-steuerung').hidden = false
 
@@ -32,7 +37,7 @@ document.querySelectorAll('[data-karussell]').forEach((box) => {
       uhr = setTimeout(() => {
         zeige(aktuell() + 1)
         planen()
-      }, TAKT)
+      }, takt)
     }
   }
   const setzePause = (an) => {
@@ -70,12 +75,30 @@ document.querySelectorAll('[data-karussell]').forEach((box) => {
   box.addEventListener('focusout', (e) => {
     if (!box.contains(e.relatedTarget)) halten(false)()
   })
+  // Touch: Antippen zeigt die Knöpfe eine Weile und hält so lange an
+  let ausblenden
+  box.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'mouse') return
+    box.classList.add('zeigen')
+    halten(true)()
+    clearTimeout(ausblenden)
+    ausblenden = setTimeout(() => {
+      box.classList.remove('zeigen')
+      if (!box.contains(document.activeElement)) halten(false)()
+    }, ANTIPPEN)
+  })
   document.addEventListener('visibilitychange', planen)
   let warte
   band.addEventListener('scroll', () => {
     clearTimeout(warte)
     warte = setTimeout(auffrischen, 80)
   })
+  // Auf Wunsch (HUBIplan: „Beginnt mit einem zufälligen Bild“) zufällig beginnen
+  const start = 'zufall' in box.dataset ? Math.floor(Math.random() * bilder.length) : 0
+  if (start > 0) {
+    bilder[start].querySelector('img')?.removeAttribute('loading')
+    band.scrollTo({ left: start * band.clientWidth, behavior: 'auto' })
+  }
   setzePause(angehalten)
   auffrischen()
 })

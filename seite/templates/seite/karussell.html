@@ -1,4 +1,4 @@
-{% load seite %}<div class="karussell" data-karussell role="region" aria-roledescription="Karussell" aria-label="Bilder">
+{% load seite %}<div class="karussell" data-karussell data-takt="{{ takt|default:7 }}"{% if zufall %} data-zufall{% endif %} role="region" aria-roledescription="Karussell" aria-label="Bilder">
   <div class="karussell-steuerung" hidden>
     <button type="button" class="knopf-rund knopf-pause" data-pause aria-label="Anhalten" aria-pressed="false">❚❚</button>
     <button type="button" class="knopf-rund" data-zurueck aria-label="Vorheriges Bild">‹</button>
