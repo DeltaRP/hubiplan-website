@@ -1,7 +1,7 @@
 {% extends "seite/basis.html" %}{% load seite i18n %}
-{% block titel %}{% translate "Aktuelles ·" %} {% endblock %}
+{% block titel %}{% translate "Aktuelles" as std %}{% baustein site "posts" std %} · {% endblock %}
 {% block inhalt %}
-<h1>{% translate "Aktuelles" %}</h1>
+<h1>{% translate "Aktuelles" as std %}{% baustein site "posts" std %}</h1>
 {% if kinds %}<p class="auswahl klein">
   <a href="{% url 'aktuelles' %}"{% if not kind %} aria-current="page"{% endif %}>{% translate "Alle" %}</a>
   {% for k in kinds %} · <a href="{% url 'aktuelles' %}?kanal={{ k }}"{% if kind == k %} aria-current="page"{% endif %}>{% if k == "instagram" %}Instagram{% else %}Facebook{% endif %}</a>{% endfor %}

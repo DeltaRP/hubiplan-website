@@ -1,12 +1,12 @@
-{% extends "seite/basis.html" %}{% load i18n %}
-{% block titel %}{% if honorary|length == 1 %}{{ honorary.0.heading|default:honorary.0.title }}{% else %}{% translate "Ehrungen" %}{% endif %} · {% endblock %}
+{% extends "seite/basis.html" %}{% load seite i18n %}
+{% block titel %}{% if honorary|length == 1 %}{% baustein site "honorary" honorary.0.heading|default:honorary.0.title %}{% else %}{% translate "Ehrungen" as std %}{% baustein site "honorary" std %}{% endif %} · {% endblock %}
 {% block inhalt %}
 {% if honorary|length == 1 %}
 {# Nur eine Ehrung: ihr Name ist die Überschrift (wie auf der Vorstandsseite) #}
-{% with t=honorary.0 %}<h1>{{ t.heading|default:t.title }}</h1>
+{% with t=honorary.0 %}<h1>{% baustein site "honorary" t.heading|default:t.title %}</h1>
 <section class="karte">{% include "seite/personen.html" with personen=t.holders ohne_datum=True %}</section>{% endwith %}
 {% else %}
-<h1>{% translate "Ehrungen" %}</h1>
+<h1>{% translate "Ehrungen" as std %}{% baustein site "honorary" std %}</h1>
 {% for t in honorary %}<section class="karte"><h2>{{ t.heading|default:t.title }}</h2>{% include "seite/personen.html" with personen=t.holders ohne_datum=True %}</section>{% empty %}<p>{% translate "Hier stehen noch keine Angaben." %}</p>{% endfor %}
 {% endif %}
 {% endblock %}

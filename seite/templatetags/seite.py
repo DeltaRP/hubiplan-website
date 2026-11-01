@@ -178,6 +178,15 @@ def _legacy_items(site) -> list:
 
 
 @register.simple_tag
+def baustein(site, key, standard=""):
+    """Name eines Bausteins für Überschrift und Seitentitel: eigener Name aus HUBIplan
+    (Ralf 2026-11-01, ``names``) oder der Standardname."""
+    names = (site.info.get("names") if site is not None else None) or {}
+    name = names.get(key) if isinstance(names, dict) else None
+    return name.strip() if isinstance(name, str) and name.strip() else standard
+
+
+@register.simple_tag
 def jahr():
     return datetime.date.today().year
 
