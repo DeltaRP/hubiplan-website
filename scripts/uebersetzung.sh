@@ -5,5 +5,5 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 DJANGO_DEBUG=true DJANGO_SECRET_KEY=nur-zum-sammeln python manage.py makemessages -l en \
-    --no-location --no-obsolete -i 'tests/*' -i 'staticfiles/*' -v0
+    --no-location --no-obsolete --no-fuzzy-matching -i 'tests/*' -i 'staticfiles/*' -v0
 grep -c '^msgid ' locale/en/LC_MESSAGES/django.po | xargs -I{} echo "{} Texte im Katalog"

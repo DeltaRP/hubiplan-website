@@ -1,12 +1,12 @@
-{% load seite %}{% if results %}
+{% load seite i18n %}{% if results %}
 <section>
-  <h2>Aktuelle Ergebnisse</h2>
+  <h2>{% translate "Aktuelle Ergebnisse" %}</h2>
   <div class="karten">{% for c in results %}<div class="karte">
     <h3><a href="{% url 'ergebnis' c.id %}">{{ c.title }}</a></h3>
-    <p class="klein">{{ c.date|datum }}{% if c.live %} <span class="zustand live">live</span>{% elif c.provisional %} <span class="zustand">vorläufig</span>{% endif %}</p>
+    <p class="klein">{{ c.date|datum }}{% if c.live %} <span class="zustand live">{% translate "live" %}</span>{% elif c.provisional %} <span class="zustand">{% translate "vorläufig" %}</span>{% endif %}</p>
     {% for s in c.scorings %}{% if s.rows %}<p><strong>{{ s.scoring }}:</strong> {% for r in s.rows %}{{ r.place }}. {{ r.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>{% endif %}{% endfor %}
     {% for p in c.prizes %}<p><strong>{{ p.name }}:</strong> {{ p.winner|default:p.unit }}</p>{% endfor %}
   </div>{% endfor %}</div>
-  <p><a class="knopf" href="{% url 'ergebnisse' %}">Alle Ergebnisse</a></p>
+  <p><a class="knopf" href="{% url 'ergebnisse' %}">{% translate "Alle Ergebnisse" %}</a></p>
 </section>
 {% endif %}

@@ -356,6 +356,8 @@ JS_TEXTE = (
     gettext_noop("Die Nachricht konnte nicht gesendet werden. Bitte später erneut versuchen."),
     gettext_noop("Weiter abspielen"),
     gettext_noop("Anhalten"),
+    gettext_noop("Aktualisiert um {zeit} Uhr."),
+    gettext_noop("Die Ergebnisse sind endgültig."),
 )
 
 

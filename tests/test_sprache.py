@@ -53,7 +53,8 @@ def test_termine_englisch(client, englisch):
     assert "Events" in html
     # Monatsüberschrift und Datum englisch, ohne „Uhr“
     assert re.search(r"June 2099", html)
-    assert "Uhr" not in html
+    sichtbar = re.sub(r'<script id="seite-texte".*?</script>', "", html, flags=re.S)
+    assert "Uhr" not in sichtbar
 
 
 def test_kontakt_englisch(client, englisch):
@@ -79,6 +80,8 @@ def test_katalog_vollstaendig():
     eintraege = PO.read_text(encoding="utf-8").split("\n\n")[1:]
     leer = [e for e in eintraege if re.search(r'^msgstr(\[\d\])? ""\Z', e.strip(), re.M)]
     assert leer == []
+    # Unscharfe Vorschläge von makemessages gelten nicht als übersetzt
+    assert "#, fuzzy" not in PO.read_text(encoding="utf-8")
 
 
 def test_rechtstexte_mit_hinweis(client, englisch):
@@ -89,3 +92,15 @@ def test_rechtstexte_mit_hinweis(client, englisch):
 
 def test_rechtstexte_deutsch_ohne_hinweis(client, hubiplan):
     assert "maßgeblich ist die deutsche Fassung" not in text(client.get("/impressum/"))
+
+
+def test_ergebnisse_englisch(client, englisch):
+    from .fake import BASE, COMP
+
+    englisch.info["results_url"] = BASE + "results/"
+    englisch.info["nav"] = [{"key": "results", "label": "Results", "children": []}]
+    html = text(client.get("/ergebnisse/"))
+    assert "<h1>Results</h1>" in html and "In progress" in html
+    html = text(client.get(f"/ergebnisse/{COMP}/"))
+    assert "All results" in html and "Place" in html
+    assert "Platz" not in html

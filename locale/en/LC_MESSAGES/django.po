@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hubiplan-website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-01 20:43+0100\n"
+"POT-Creation-Date: 2026-11-01 21:09+0100\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -259,6 +259,101 @@ msgstr "Subscribe to calendar"
 msgid "Folgt %(name)s"
 msgstr "Follow %(name)s"
 
+msgid "Alle Ergebnisse"
+msgstr "All results"
+
+msgid "Veranstalter:"
+msgstr "Organiser:"
+
+msgid "Die Ergebnisse werden laufend ergänzt."
+msgstr "The results are being updated continuously."
+
+msgid "Aktualisieren"
+msgstr "Refresh"
+
+msgid "live"
+msgstr "live"
+
+msgid "vorläufig"
+msgstr "provisional"
+
+msgid "Der Wettbewerb läuft, die Ergebnisse sind vorläufig."
+msgstr "The competition is in progress; the results are provisional."
+
+msgid "Die Ergebnisse sind noch nicht endgültig."
+msgstr "The results are not final yet."
+
+msgid "Titel"
+msgstr "Titles"
+
+msgid "Preise"
+msgstr "Prizes"
+
+msgid "Preis"
+msgstr "Prize"
+
+msgid "Errungen von"
+msgstr "Won by"
+
+#, python-format
+msgid "mit dem %(n)s. Schuss"
+msgstr "with shot no. %(n)s"
+
+msgid "noch offen"
+msgstr "still open"
+
+msgid "Platz"
+msgstr "Place"
+
+msgid "Einheit"
+msgstr "Unit"
+
+msgid "Mannschaft"
+msgstr "Team"
+
+msgid "Ergebnis"
+msgstr "Result"
+
+msgid "außer Konkurrenz"
+msgstr "hors concours"
+
+#, python-format
+msgid "Gezeigt sind die Plätze 1 bis 3 von %(n)s Teilnehmenden."
+msgstr "Showing places 1 to 3 of %(n)s participants."
+
+msgid "Noch keine Ergebnisse."
+msgstr "No results yet."
+
+msgid "Titelträger"
+msgstr "Title holders"
+
+msgid "Jahr"
+msgstr "Year"
+
+msgid "Sieger je Jahr"
+msgstr "Winners by year"
+
+msgid "Sieger"
+msgstr "Winners"
+
+msgid "Hier stehen noch keine Ergebnisse."
+msgstr "No results here yet."
+
+msgid "Ergebnisse"
+msgstr "Results"
+
+msgid "Gerade im Gange"
+msgstr "In progress"
+
+msgid "Wettbewerbe über die Jahre"
+msgstr "Competitions over the years"
+
+msgid "Gewonnen von"
+msgstr "Won by"
+
+msgid "(endgültig gewonnen)"
+msgstr "(won outright)"
+
 msgid "Zur Startseite"
 msgstr "To the home page"
 
@@ -420,6 +515,9 @@ msgstr "All majesties"
 msgid "Neu auf Instagram"
 msgstr "New on Instagram"
 
+msgid "Aktuelle Ergebnisse"
+msgstr "Latest results"
+
 msgid "fällt aus"
 msgstr "cancelled"
 
@@ -496,9 +594,6 @@ msgid "Chronik %(name)s (%(n)s Eintrag)"
 msgid_plural "Chronik %(name)s (%(n)s Einträge)"
 msgstr[0] "Chronicle of %(name)s (%(n)s entry)"
 msgstr[1] "Chronicle of %(name)s (%(n)s entries)"
-
-msgid "Jahr"
-msgstr "Year"
 
 msgid "Begleitung"
 msgstr "Companions"
@@ -580,6 +675,13 @@ msgstr "The message could not be sent. Please try again later."
 
 msgid "Weiter abspielen"
 msgstr "Resume"
+
+#, python-brace-format
+msgid "Aktualisiert um {zeit} Uhr."
+msgstr "Updated at {zeit}."
+
+msgid "Die Ergebnisse sind endgültig."
+msgstr "The results are final."
 
 msgid "Seite nicht gefunden"
 msgstr "Page not found"
