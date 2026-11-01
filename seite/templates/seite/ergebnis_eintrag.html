@@ -1,0 +1,1 @@
+{% load seite %}<li><a href="{% url 'ergebnis' c.id %}">{{ c.title }}</a> <span class="klein">{{ c.date|datum }}{% if c.location %} · {{ c.location }}{% endif %}{% if not c.own and c.organizer %} · Veranstalter: {{ c.organizer }}{% endif %}</span>{% if c.live %} <span class="zustand live">live</span>{% elif c.provisional %} <span class="zustand">vorläufig</span>{% endif %}</li>

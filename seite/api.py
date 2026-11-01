@@ -101,8 +101,17 @@ def resolve(host: str) -> str:
     return key
 
 
-def get(key: str, path: str = "", *, preview: str | None = None, cached: bool = True):
-    """JSON einer Adresse der Webseite, z. B. ``board/``. 503 → Maintenance."""
+def get(
+    key: str,
+    path: str = "",
+    *,
+    preview: str | None = None,
+    cached: bool = True,
+    seconds: int | None = None,
+):
+    """JSON einer Adresse der Webseite, z. B. ``board/``. 503 → Maintenance.
+
+    ``seconds``: eigene, kürzere Zwischenspeicherung (z. B. Stand laufender Wettbewerbe)."""
     full = f"{PREFIX}{key}/{path}"
     use_cache = cached and not preview
     ck = _key("get", full)
@@ -119,7 +128,7 @@ def get(key: str, path: str = "", *, preview: str | None = None, cached: bool = 
     except ValueError as exc:
         raise Unavailable(f"{path}: keine JSON-Antwort") from exc
     if use_cache and res.status in (200, 404, 503):
-        cache.set(ck, (res.status, data), settings.CACHE_SECONDS)
+        cache.set(ck, (res.status, data), seconds or settings.CACHE_SECONDS)
     return _result(res.status, data)
 
 

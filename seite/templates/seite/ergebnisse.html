@@ -1,0 +1,34 @@
+{% extends "seite/basis.html" %}{% load seite %}
+{% block titel %}Ergebnisse · {% endblock %}
+{% block inhalt %}
+<h1>Ergebnisse</h1>
+{% if live %}
+<section>
+  <h2>Gerade im Gange</h2>
+  <ul class="ergebnisliste">{% for c in live %}{% include "seite/ergebnis_eintrag.html" %}{% endfor %}</ul>
+</section>
+{% endif %}
+{% for jahr, liste in years %}
+<section>
+  <h2>{{ jahr }}</h2>
+  <ul class="ergebnisliste">{% for c in liste %}{% include "seite/ergebnis_eintrag.html" %}{% endfor %}</ul>
+</section>
+{% endfor %}
+{% if series %}
+<section>
+  <h2>Wettbewerbe über die Jahre</h2>
+  <ul class="ergebnisliste">{% for s in series %}<li><a href="{% url 'reihe' s.id %}">{{ s.name }}</a></li>{% endfor %}</ul>
+</section>
+{% endif %}
+{% for t in trophies %}
+<section>
+  <h2>{{ t.name }}</h2>
+  {% if t.description %}<p>{{ t.description }}</p>{% endif %}
+  <table class="zeitliste">
+    <thead><tr><th scope="col">Jahr</th><th scope="col">Gewonnen von</th></tr></thead>
+    <tbody>{% for h in t.holders %}<tr><td>{{ h.year }}</td><td>{{ h.name }}{% if h.kept %} <span class="klein">(endgültig gewonnen)</span>{% endif %}</td></tr>{% endfor %}</tbody>
+  </table>
+</section>
+{% endfor %}
+{% if not live and not years and not series and not trophies %}<p>Hier stehen noch keine Ergebnisse.</p>{% endif %}
+{% endblock %}

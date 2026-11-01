@@ -219,7 +219,16 @@ def _public_ics(site: Site, unit: str | None = None) -> str | None:
 
 # Bausteine der Startseite; ältere HUBIplan-Stände ohne „home“ zeigen die
 # bisherige Startseite in dieser Reihenfolge
-HOME_SECTIONS = ("carousel", "greeting", "events", "honors", "units", "instagram", "facebook")
+HOME_SECTIONS = (
+    "carousel",
+    "greeting",
+    "events",
+    "honors",
+    "results",
+    "units",
+    "instagram",
+    "facebook",
+)
 DEFAULT_HOME = ("carousel", "greeting", "events", "honors", "units")
 
 
@@ -236,6 +245,34 @@ def _home(site: Site) -> list[str]:
 
 SIDE_SECTIONS = {"events", "honors", "units"}
 
+# Wettbewerbsergebnisse (Wettbewerbe Schritt 5): Stand laufender Wettbewerbe nur kurz
+# zwischenspeichern; die Rangliste selbst hängt am Stand und ist dann sofort neu
+LIVE_SECONDS = 5
+OVERVIEW_SECONDS = 30
+TOKEN = re.compile(r"^[a-f0-9]{20}$")
+
+
+def _results_on(site: Site) -> bool:
+    return bool(site.info.get("results_url"))
+
+
+def _home_results(site: Site) -> list[dict]:
+    try:
+        data = site.get("results/?start=1", seconds=OVERVIEW_SECONDS)
+    except api.NotFound:
+        return []
+    return [_with_date(c) for c in data.get("competitions", [])]
+
+
+def _with_date(comp: dict) -> dict:
+    from datetime import date
+
+    try:
+        when = date.fromisoformat(comp.get("date") or "")
+    except ValueError:
+        when = None
+    return {**comp, "when": when}
+
 
 @require_GET
 @site_view()
@@ -248,6 +285,7 @@ def start(request, site: Site):
         if "honors" in home and site.block("honors")
         else []
     )
+    results = _home_results(site) if "results" in home and _results_on(site) else []
     return _page(
         request,
         "seite/start.html",
@@ -265,6 +303,7 @@ def start(request, site: Site):
                 greeting and "carousel" in home and len(greeting.get("gallery") or []) > 1
             ),
             "events": events,
+            "results": results,
             # Ralf 2026-10-31: auf der Startseite nur Träger des laufenden Jahres
             "honors": [
                 d for d in honors if d.get("current") and d.get("current_year") is not False
@@ -399,6 +438,99 @@ def honorary(request, site: Site):
         site,
         {"honorary": site.get("board/").get("honorary", [])},
     )
+
+
+# --- Wettbewerbsergebnisse ---
+
+
+@require_GET
+@site_view()
+def results(request, site: Site):
+    """Übersicht: veröffentlichte Wettbewerbe, Reihen und Wanderpokale."""
+    if not _results_on(site):
+        raise api.NotFound()
+    data = site.get("results/", seconds=OVERVIEW_SECONDS)
+    comps = [_with_date(c) for c in data.get("competitions", [])]
+    return _page(
+        request,
+        "seite/ergebnisse.html",
+        site,
+        {
+            "live": [c for c in comps if not c.get("final")],
+            "years": _by_year([c for c in comps if c.get("final")]),
+            "series": data.get("series", []),
+            "trophies": data.get("trophies", []),
+        },
+    )
+
+
+def _by_year(comps: list[dict]) -> list[tuple[int, list[dict]]]:
+    groups: OrderedDict[int, list[dict]] = OrderedDict()
+    for c in comps:
+        groups.setdefault(c.get("year"), []).append(c)
+    return list(groups.items())
+
+
+def _result(site: Site, kennung: str) -> dict:
+    """Rangliste eines Wettbewerbs; zuerst den kleinen Stand, dann die Rangliste zu genau
+    diesem Stand (neues Ergebnis → neuer Stand → sofort neue Tabelle)."""
+    if not _results_on(site) or not TOKEN.match(kennung):
+        raise api.NotFound()
+    stand = site.get(f"results/{kennung}/version/", seconds=LIVE_SECONDS)
+    version = re.sub(r"[^A-Za-z0-9]", "", str(stand.get("version", "")))[:64]
+    return _with_date(site.get(f"results/{kennung}/?stand={version}"))
+
+
+@require_GET
+@site_view()
+def result(request, site: Site, kennung: str):
+    data = _result(site, kennung)
+    response = _page(request, "seite/ergebnis.html", site, {"c": data})
+    if not data.get("final"):
+        response["Cache-Control"] = "no-cache"
+    return response
+
+
+@require_GET
+@site_view()
+def result_table(request, site: Site, kennung: str):
+    """Nur die Rangliste (für das Nachladen während „live“)."""
+    data = _result(site, kennung)
+    response = _page(request, "seite/ergebnis_inhalt.html", site, {"c": data})
+    response["Cache-Control"] = "no-cache"
+    return response
+
+
+@require_GET
+@site_view()
+def result_version(request, site: Site, kennung: str):
+    """Kleiner Stand für den Browser: Er fragt ihn während „live“ alle 15 Sekunden ab."""
+    if not _results_on(site) or not TOKEN.match(kennung):
+        raise api.NotFound()
+    stand = site.get(f"results/{kennung}/version/", seconds=LIVE_SECONDS)
+    response = JsonResponse(
+        {"version": str(stand.get("version", "")), "final": bool(stand.get("final"))}
+    )
+    response["Cache-Control"] = "no-cache"
+    return response
+
+
+@require_GET
+@site_view()
+def result_series(request, site: Site, kennung: str):
+    """Archiv einer Reihe: Sieger je Jahr und Titel über alle Jahre."""
+    if not _results_on(site) or not TOKEN.match(kennung):
+        raise api.NotFound()
+    data = site.get(f"results/series/{kennung}/")
+    for y in data.get("years", []):
+        y["kennung"] = _token_of(y.get("url"))
+    return _page(request, "seite/ergebnis_reihe.html", site, {"s": data})
+
+
+def _token_of(url: str | None) -> str | None:
+    """Kennung eines Wettbewerbs aus seiner Adresse bei HUBIplan (…/results/<kennung>/)."""
+    m = re.search(r"/results/([a-f0-9]{20})/$", url or "")
+    return m.group(1) if m else None
 
 
 @require_GET
