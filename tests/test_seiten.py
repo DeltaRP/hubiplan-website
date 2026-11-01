@@ -35,9 +35,9 @@ def test_startseite(client, hubiplan):
     assert 'href="/zuege/jaeger/"' in html
     assert r["Content-Security-Policy"].startswith("default-src 'self'")
     assert "https://hubiplan.example" in r["Content-Security-Policy"]
-    # Fußzeile verlinkt HUBIplan auf GitHub, in neuem Fenster
+    # Fußzeile verlinkt die GitHub-Organisation hubiplan, in neuem Fenster
     assert (
-        'Daten aus <a href="https://github.com/hubiplan/hubiplan" '
+        'Daten aus <a href="https://github.com/hubiplan" '
         'target="_blank" rel="noopener noreferrer">HUBIplan<'
     ) in html
     # AGPL § 13: Quellcode der Webseite
