@@ -1,7 +1,7 @@
 {% extends "seite/basis.html" %}{% load seite i18n %}
-{% block titel %}{{ site.info.unit_label_plural|default:"Einheiten" }} · {% endblock %}
+{% block titel %}{% baustein site "units" site.info.unit_label_plural|default:"Einheiten" %} · {% endblock %}
 {% block inhalt %}
-<h1>{{ site.info.unit_label_plural|default:"Einheiten" }}</h1>
+<h1>{% baustein site "units" site.info.unit_label_plural|default:"Einheiten" %}</h1>
 <ul class="kacheln gross">
 {% for u in units %}
   <li><a href="{% einheit_url site u.slug %}">

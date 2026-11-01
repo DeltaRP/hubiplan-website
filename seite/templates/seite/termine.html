@@ -1,7 +1,7 @@
 {% extends "seite/basis.html" %}{% load seite i18n %}
-{% block titel %}{% translate "Termine ·" %} {% endblock %}
+{% block titel %}{% translate "Termine" as std %}{% baustein site "events" std %} · {% endblock %}
 {% block inhalt %}
-<h1>{% translate "Termine" %}</h1>
+<h1>{% translate "Termine" as std %}{% baustein site "events" std %}</h1>
 {% if units %}
 <form class="filter" method="get" action="{% url 'termine' %}">
   <label for="einheit">{% translate "Termine für" %}</label>

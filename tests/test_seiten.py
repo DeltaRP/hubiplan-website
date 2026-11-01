@@ -769,6 +769,23 @@ def test_menue_aus_hubiplan(client, hubiplan):
     assert ">Neu<" not in html
 
 
+def test_eigene_namen_der_bausteine(client, hubiplan):
+    """Ralf 2026-11-01: eigener Name eines Bausteins steht in Menü, Überschrift und Titel."""
+    hubiplan.info["nav"] = [
+        {"key": "events", "label": "Unsere Feste"},
+        {"key": "board", "label": "Vorstand"},
+    ]
+    hubiplan.info["names"] = {"events": "Unsere Feste", "units": "Unsere Züge", "contact": " "}
+    html = text(client.get("/termine/"))
+    assert '<a href="/termine/" aria-current="page">Unsere Feste</a>' in html
+    assert "<h1>Unsere Feste</h1>" in html
+    assert "<title>Unsere Feste ·" in html
+    assert "<h1>Unsere Züge</h1>" in text(client.get("/zuege/"))
+    # Leer oder ohne Eintrag: Standardname
+    assert "<h1>Vorstand</h1>" in text(client.get("/vorstand/"))
+    assert "<h1>Kontakt</h1>" in text(client.get("/kontakt/"))
+
+
 def test_homepage_der_einheit(client, hubiplan):
     """Eigene Homepage der Einheit: Link in neuem Tab, nur wenn HUBIplan sie liefert."""
     assert "Homepage" not in text(client.get("/zuege/jaeger/"))

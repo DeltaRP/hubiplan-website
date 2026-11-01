@@ -1,7 +1,7 @@
-{% extends "seite/basis.html" %}{% load i18n %}
-{% block titel %}{% translate "Dokumente ·" %} {% endblock %}
+{% extends "seite/basis.html" %}{% load seite i18n %}
+{% block titel %}{% translate "Dokumente" as std %}{% baustein site "statutes" std %} · {% endblock %}
 {% block inhalt %}
-<h1>{% translate "Dokumente" %}</h1>
+<h1>{% translate "Dokumente" as std %}{% baustein site "statutes" std %}</h1>
 <ul class="dokumente">
 {% for d in documents %}
   <li><a href="{{ d.url }}" rel="noopener" target="_blank"{% if d.preview %} class="mit-vorschau"{% endif %}>{% if d.preview %}<img class="dok-vorschau" src="{{ d.preview }}" alt="" loading="lazy" width="480" height="679">{% else %}<span class="dok-symbol" aria-hidden="true">{{ d.kind }}</span>{% endif %}<strong>{{ d.title }}</strong><span class="nur-vorlesen"> ({% if d.kind %}{{ d.kind }}, {% endif %}{% translate "öffnet in neuem Fenster" %})</span></a></li>

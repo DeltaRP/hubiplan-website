@@ -1,7 +1,7 @@
 {% extends "seite/basis.html" %}{% load seite i18n %}
-{% block titel %}{% translate "Ämter ·" %} {% endblock %}
+{% block titel %}{% translate "Ämter" as std %}{% baustein site "offices" std %} · {% endblock %}
 {% block inhalt %}
-<h1>{% translate "Ämter" %}</h1>
+<h1>{% translate "Ämter" as std %}{% baustein site "offices" std %}</h1>
 {# Ein Block je Amt, auf breiten Bildschirmen nebeneinander (Ralf 31.10.) #}
 <div class="karten aemter">
 {% for c in offices %}

@@ -26,9 +26,6 @@ msgstr "Stage"
 msgid "Zeitung"
 msgstr "Newspaper"
 
-msgid "Ämter ·"
-msgstr "Offices ·"
-
 msgid "Ämter"
 msgstr "Offices"
 
@@ -45,9 +42,6 @@ msgstr "%(von)s to date"
 #, python-format
 msgid "%(von)s bis %(bis)s"
 msgstr "%(von)s to %(bis)s"
-
-msgid "Aktuelles ·"
-msgstr "News ·"
 
 msgid "Aktuelles"
 msgstr "News"
@@ -196,9 +190,6 @@ msgstr "Watch video on %(ort)s"
 msgid "Beitrag auf %(ort)s ansehen"
 msgstr "View post on %(ort)s"
 
-msgid "Chronik ·"
-msgstr "Chronicle ·"
-
 msgid "Chronik"
 msgstr "Chronicle"
 
@@ -223,9 +214,6 @@ msgstr "The privacy notice is here:"
 
 msgid "Für diese Seite sind noch keine Datenschutzhinweise hinterlegt."
 msgstr "No privacy notice has been added for this site yet."
-
-msgid "Dokumente ·"
-msgstr "Documents ·"
 
 msgid "Dokumente"
 msgstr "Documents"
@@ -534,9 +522,6 @@ msgstr "Close"
 msgid "bis"
 msgstr "to"
 
-msgid "Termine ·"
-msgstr "Events ·"
-
 msgid "Termine"
 msgstr "Events"
 
@@ -567,9 +552,6 @@ msgstr "Or add this address to your calendar as a subscription:"
 
 msgid "QR-Code für das Kalender-Abo"
 msgstr "QR code for the calendar subscription"
-
-msgid "Vorstand ·"
-msgstr "Board ·"
 
 msgid "Vorstand"
 msgstr "Board"

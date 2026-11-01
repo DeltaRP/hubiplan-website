@@ -1,7 +1,7 @@
-{% extends "seite/basis.html" %}{% load static i18n %}
-{% block titel %}{% translate "Kontakt" %} · {% endblock %}
+{% extends "seite/basis.html" %}{% load static seite i18n %}
+{% block titel %}{% translate "Kontakt" as std %}{% baustein site "contact" std %} · {% endblock %}
 {% block inhalt %}
-<h1>{% translate "Kontakt" %}</h1>
+<h1>{% translate "Kontakt" as std %}{% baustein site "contact" std %}</h1>
 {% if recipient %}
 <form id="kontakt" class="formular" method="post" action="{{ post_url }}" novalidate
       data-ziel="{{ post_url }}" data-token="{{ challenge.token }}" data-salz="{{ challenge.salt }}"
