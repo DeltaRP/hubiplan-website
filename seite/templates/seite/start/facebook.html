@@ -1,7 +1,7 @@
-{% if facebook_posts %}
+{% load i18n %}{% if facebook_posts %}
 <section>
-  <h2>Neu auf Facebook</h2>
+  <h2>{% translate "Neu auf Facebook" %}</h2>
   {% include "seite/beitraege.html" with beitraege=facebook_posts %}
-  <p><a class="knopf" href="{% url 'aktuelles' %}?kanal=facebook">Alle Beiträge</a></p>
+  <p><a class="knopf" href="{% url 'aktuelles' %}?kanal=facebook">{% translate "Alle Beiträge" %}</a></p>
 </section>
 {% endif %}

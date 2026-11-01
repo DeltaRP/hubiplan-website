@@ -1,7 +1,7 @@
-{% extends "seite/basis.html" %}{% load seite %}
-{% block titel %}Chronik · {% endblock %}
+{% extends "seite/basis.html" %}{% load seite i18n %}
+{% block titel %}{% translate "Chronik ·" %} {% endblock %}
 {% block inhalt %}
-<h1>{{ page.title|default:"Chronik" }}</h1>
+<h1>{% translate "Chronik" as chronik %}{{ page.title|default:chronik }}</h1>
 {% lokal site page.image.url as bild %}
 {% if bild %}<figure class="titelbild"><img src="{{ bild }}" alt="{{ page.image.alt }}">{% if page.image.caption %}<figcaption>{{ page.image.caption }}</figcaption>{% endif %}</figure>{% endif %}
 <div class="text">{{ page.text|md:site }}</div>

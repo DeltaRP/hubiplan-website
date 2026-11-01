@@ -1,12 +1,12 @@
-{% extends "seite/basis.html" %}
-{% block titel %}{% if dignities|length == 1 %}{% with d=dignities.0 %}{% if d.reigns|length > 1 %}{{ d.name_plural|default:d.name }}{% else %}{{ d.name }}{% endif %}{% endwith %}{% else %}Majestäten{% endif %} · {% endblock %}
+{% extends "seite/basis.html" %}{% load i18n %}
+{% block titel %}{% if dignities|length == 1 %}{% with d=dignities.0 %}{% if d.reigns|length > 1 %}{{ d.name_plural|default:d.name }}{% else %}{{ d.name }}{% endif %}{% endwith %}{% else %}{% translate "Majestäten" %}{% endif %} · {% endblock %}
 {% block inhalt %}
 {% if dignities|length == 1 %}{% with d=dignities.0 %}
 {# Nur eine Würde: ihr Name ist die Überschrift, bei mehreren Regentschaften in der Mehrzahl, kein „Majestäten“ darüber (Ralf 2026-10-30) #}
 <h1>{% if d.reigns|length > 1 %}{{ d.name_plural|default:d.name }}{% else %}{{ d.name }}{% endif %}</h1>
 {% include "seite/wuerde.html" with voll=True ohne_titel=True %}
 {% endwith %}{% else %}
-<h1>Majestäten</h1>
-{% for d in dignities %}{% include "seite/wuerde.html" with voll=True %}{% empty %}<p>Hier stehen noch keine Angaben.</p>{% endfor %}
+<h1>{% translate "Majestäten" %}</h1>
+{% for d in dignities %}{% include "seite/wuerde.html" with voll=True %}{% empty %}<p>{% translate "Hier stehen noch keine Angaben." %}</p>{% endfor %}
 {% endif %}
 {% endblock %}

@@ -1,7 +1,7 @@
-{% if instagram_posts %}
+{% load i18n %}{% if instagram_posts %}
 <section>
-  <h2>Neu auf Instagram</h2>
+  <h2>{% translate "Neu auf Instagram" %}</h2>
   {% include "seite/beitraege.html" with beitraege=instagram_posts %}
-  <p><a class="knopf" href="{% url 'aktuelles' %}?kanal=instagram">Alle Beiträge</a></p>
+  <p><a class="knopf" href="{% url 'aktuelles' %}?kanal=instagram">{% translate "Alle Beiträge" %}</a></p>
 </section>
 {% endif %}

@@ -4,6 +4,16 @@
 // startet es angehalten. Die Knöpfe liegen im Bild und erscheinen bei Maus,
 // Tastaturfokus oder nach Antippen. Ohne Skript lässt sich das Band seitlich
 // wischen bzw. scrollen. Auf Wunsch beginnt es mit einem zufälligen Bild (data-zufall).
+// Texte in der Sprache der Seite (basis.html, Element seite-texte)
+const t = (s) => {
+  const e = document.getElementById('seite-texte')
+  if (!e) return s
+  try {
+    return JSON.parse(e.textContent)[s] || s
+  } catch {
+    return s
+  }
+}
 const STANDARD = 7
 const ANTIPPEN = 4000 // so lange bleiben die Knöpfe nach dem Antippen sichtbar
 
@@ -43,7 +53,7 @@ document.querySelectorAll('[data-karussell]').forEach((box) => {
   const setzePause = (an) => {
     angehalten = an
     pause.setAttribute('aria-pressed', String(an))
-    pause.setAttribute('aria-label', an ? 'Weiter abspielen' : 'Anhalten')
+    pause.setAttribute('aria-label', an ? t('Weiter abspielen') : t('Anhalten'))
     pause.textContent = an ? '▶' : '❚❚'
     // Während es läuft, Wechsel nicht ansagen (sonst redet der Screenreader ständig)
     zaehler.setAttribute('aria-live', an ? 'polite' : 'off')

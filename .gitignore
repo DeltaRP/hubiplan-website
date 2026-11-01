@@ -16,3 +16,6 @@ staticfiles/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Übersetzungen: .mo entsteht beim Bauen (Dockerfile)
+*.mo

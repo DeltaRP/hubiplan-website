@@ -1,14 +1,14 @@
-{% extends "seite/basis.html" %}
-{% block titel %}Vorstand · {% endblock %}
+{% extends "seite/basis.html" %}{% load i18n %}
+{% block titel %}{% translate "Vorstand ·" %} {% endblock %}
 {% block inhalt %}
-<h1>Vorstand</h1>
-{% if roles %}{% include "seite/rollen.html" with rollen=roles %}{% else %}<p>Hier stehen noch keine Angaben.</p>{% endif %}
+<h1>{% translate "Vorstand" %}</h1>
+{% if roles %}{% include "seite/rollen.html" with rollen=roles %}{% else %}<p>{% translate "Hier stehen noch keine Angaben." %}</p>{% endif %}
 {% if honorary|length == 1 %}
 {# Nur eine Ehrung: sein Name ist die Überschrift, kein Sammelbegriff (Ralf 2026-10-30) #}
 {% with t=honorary.0 %}<h2>{{ t.heading|default:t.title }}</h2>
 <section class="karte">{% include "seite/personen.html" with personen=t.holders ohne_datum=True %}</section>{% endwith %}
 {% elif honorary %}
-<h2>Ehrungen</h2>
+<h2>{% translate "Ehrungen" %}</h2>
 {% for t in honorary %}<section class="karte"><h3>{{ t.heading|default:t.title }}</h3>{% include "seite/personen.html" with personen=t.holders ohne_datum=True %}</section>{% endfor %}
 {% endif %}
 {% endblock %}

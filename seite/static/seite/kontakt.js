@@ -2,6 +2,12 @@
 // HUBIplan schicken (dort gelten Drosselung und Prüfung).
 (function () {
   "use strict";
+  // Texte in der Sprache der Seite (basis.html, Element seite-texte)
+  function t(s) {
+    var e = document.getElementById("seite-texte");
+    if (!e) return s;
+    try { return JSON.parse(e.textContent)[s] || s; } catch (x) { return s; }
+  }
   var form = document.getElementById("kontakt");
   if (!form || !window.crypto || !window.crypto.subtle || !window.fetch) return;
   var meldung = form.querySelector(".meldung");
@@ -31,10 +37,10 @@
 
   // Feldfehler direkt am Feld (aria-invalid + aria-describedby), Barrierefreiheit W-05
   var FELDER = {
-    name: ["k-name", "Bitte Ihren Namen eingeben."],
-    email: ["k-mail", "Bitte eine gültige E-Mail-Adresse eingeben, z. B. name@beispiel.de."],
-    subject: ["k-betreff", "Bitte einen Betreff eingeben."],
-    message: ["k-text", "Bitte eine Nachricht mit mindestens 10 Zeichen eingeben."]
+    name: ["k-name", t("Bitte Ihren Namen eingeben.")],
+    email: ["k-mail", t("Bitte eine gültige E-Mail-Adresse eingeben, z. B. name@beispiel.de.")],
+    subject: ["k-betreff", t("Bitte einen Betreff eingeben.")],
+    message: ["k-text", t("Bitte eine Nachricht mit mindestens 10 Zeichen eingeben.")]
   };
 
   function feldFehler(name, text) {
@@ -95,12 +101,12 @@
     ev.preventDefault();
     var erstes = pruefen();
     if (erstes) {
-      zeige("Bitte die markierten Felder prüfen.", true);
+      zeige(t("Bitte die markierten Felder prüfen."), true);
       erstes.focus();
       return;
     }
     knopf.disabled = true;
-    zeige("Nachricht wird vorbereitet …");
+    zeige(t("Nachricht wird vorbereitet …"));
     try {
       var nonce = await loese(form.dataset.salz, parseInt(form.dataset.schwierigkeit, 10) || 16);
       var warten = 3500 - (Date.now() - geladen);
@@ -118,7 +124,7 @@
       };
       var kopf = { "Content-Type": "application/json" };
       if (form.dataset.vorschau) kopf["X-Preview-Session"] = form.dataset.vorschau;
-      zeige("Nachricht wird gesendet …");
+      zeige(t("Nachricht wird gesendet …"));
       var res = await fetch(form.dataset.ziel, {
         method: "POST",
         headers: kopf,
@@ -128,20 +134,20 @@
       });
       if (res.ok) {
         form.reset();
-        zeige("Danke! Ihre Nachricht ist angekommen.");
+        zeige(t("Danke! Ihre Nachricht ist angekommen."));
         // Für eine weitere Nachricht eine neue Aufgabe holen; geht das nicht, neu laden
         try {
           await neueAufgabe();
           knopf.disabled = false;
         } catch (e) {
           knopf.type = "button";
-          knopf.textContent = "Weitere Nachricht";
+          knopf.textContent = t("Weitere Nachricht");
           knopf.disabled = false;
           knopf.addEventListener("click", function () { location.reload(); }, { once: true });
         }
         return;
       }
-      var text = "Die Nachricht konnte nicht gesendet werden.";
+      var text = t("Die Nachricht konnte nicht gesendet werden.");
       var erstesFeld = null;
       try {
         var body = await res.json();
@@ -149,9 +155,9 @@
           // Aufgabe abgelaufen: neue holen, Eingaben bleiben stehen
           try {
             await neueAufgabe();
-            zeige("Sicherheitsprüfung erneuert. Ihre Nachricht bleibt erhalten. Bitte senden Sie erneut.", true);
+            zeige(t("Sicherheitsprüfung erneuert. Ihre Nachricht bleibt erhalten. Bitte senden Sie erneut."), true);
           } catch (e) {
-            zeige("Das Formular ist abgelaufen. Bitte kopieren Sie Ihre Nachricht und laden Sie die Seite neu.", true);
+            zeige(t("Das Formular ist abgelaufen. Bitte kopieren Sie Ihre Nachricht und laden Sie die Seite neu."), true);
           }
           knopf.disabled = false;
           knopf.focus();
@@ -159,7 +165,7 @@
         }
         if (body && body.code === "used") {
           // Diese Aufgabe wurde schon benutzt: die Nachricht ist bereits angekommen
-          zeige("Diese Nachricht ist bereits bei uns angekommen. Sie müssen sie nicht erneut senden.");
+          zeige(t("Diese Nachricht ist bereits bei uns angekommen. Sie müssen sie nicht erneut senden."));
           try { await neueAufgabe(); } catch (e) { /* nächster Versuch lädt neu */ }
           knopf.disabled = false;
           return;
@@ -171,7 +177,7 @@
         else if (body && body.detail) text = body.detail;
         else if (body && body.recipient) {
           // Fester Empfänger nicht mehr erreichbar (z. B. Rolle inzwischen ohne Adresse)
-          text = "An diese Stelle kann gerade keine Nachricht gehen. Bitte schreiben Sie über den Menüpunkt „Kontakt“ an den Verein.";
+          text = t("An diese Stelle kann gerade keine Nachricht gehen. Bitte schreiben Sie über den Menüpunkt „Kontakt“ an den Verein.");
         }
         else if (body && typeof body === "object") {
           // Feldfehler von HUBIplan dem jeweiligen Feld zuordnen
@@ -181,15 +187,15 @@
             feldFehler(name, meldung);
             if (!erstesFeld) erstesFeld = document.getElementById(FELDER[name][0]);
           });
-          text = erstesFeld ? "Bitte die markierten Felder prüfen." : "Bitte die Angaben prüfen.";
+          text = erstesFeld ? t("Bitte die markierten Felder prüfen.") : t("Bitte die Angaben prüfen.");
         }
       } catch (e) { /* keine JSON-Antwort */ }
-      if (res.status === 429) text = "Zu viele Nachrichten. Bitte später erneut versuchen.";
+      if (res.status === 429) text = t("Zu viele Nachrichten. Bitte später erneut versuchen.");
       zeige(text, true);
       knopf.disabled = false;
       if (erstesFeld) erstesFeld.focus();
     } catch (e) {
-      zeige("Die Nachricht konnte nicht gesendet werden. Bitte später erneut versuchen.", true);
+      zeige(t("Die Nachricht konnte nicht gesendet werden. Bitte später erneut versuchen."), true);
       knopf.disabled = false;
     }
   });

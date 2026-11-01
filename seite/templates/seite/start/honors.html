@@ -1,7 +1,7 @@
-{% if honors %}
+{% load i18n %}{% if honors %}
 <section>
-  <h2>Unsere Majestäten</h2>
+  <h2>{% translate "Unsere Majestäten" %}</h2>
   <div class="karten">{% for d in honors %}<div class="karte">{% include "seite/wuerde.html" %}</div>{% endfor %}</div>
-  <p><a class="knopf" href="{% url 'majestaeten' %}">Alle {{ site.info.honors_label|default:"Majestäten" }}</a></p>
+  <p><a class="knopf" href="{% url 'majestaeten' %}">{% if site.info.honors_label %}{% blocktranslate with name=site.info.honors_label %}Alle {{ name }}{% endblocktranslate %}{% else %}{% translate "Alle Majestäten" %}{% endif %}</a></p>
 </section>
 {% endif %}

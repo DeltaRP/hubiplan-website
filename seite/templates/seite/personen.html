@@ -1,11 +1,11 @@
-{% load seite %}<ul class="personen">
+{% load seite i18n %}<ul class="personen">
 {% for p in personen %}
   <li class="person">
     {% lokal site p.photo_url as foto %}
     {% if foto %}<img src="{{ foto }}" alt="Foto von {{ p.name }}" loading="lazy" width="96" height="96">{% else %}<span class="ohne-foto" aria-hidden="true">{{ p.name|slice:":1" }}</span>{% endif %}
     <span>
       <strong>{{ p.name }}</strong>
-      {% if p.since and not ohne_datum %}<br><span class="klein">seit {{ p.since|nur_jahr }}</span>{% endif %}
+      {% if p.since and not ohne_datum %}<br><span class="klein">{% blocktranslate with jahr=p.since|nur_jahr %}seit {{ jahr }}{% endblocktranslate %}</span>{% endif %}
       {% if p.email %}<br><a href="mailto:{{ p.email }}">{{ p.email }}</a>{% endif %}
       {% if p.phone %}<br>{% with ziel=p.phone|tel %}{% if ziel %}<a href="tel:{{ ziel }}">{{ p.phone }}</a>{% else %}{{ p.phone }}{% endif %}{% endwith %}{% endif %}
     </span>

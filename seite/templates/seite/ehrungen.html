@@ -1,12 +1,12 @@
-{% extends "seite/basis.html" %}
-{% block titel %}{% if honorary|length == 1 %}{{ honorary.0.heading|default:honorary.0.title }}{% else %}Ehrungen{% endif %} · {% endblock %}
+{% extends "seite/basis.html" %}{% load i18n %}
+{% block titel %}{% if honorary|length == 1 %}{{ honorary.0.heading|default:honorary.0.title }}{% else %}{% translate "Ehrungen" %}{% endif %} · {% endblock %}
 {% block inhalt %}
 {% if honorary|length == 1 %}
 {# Nur eine Ehrung: ihr Name ist die Überschrift (wie auf der Vorstandsseite) #}
 {% with t=honorary.0 %}<h1>{{ t.heading|default:t.title }}</h1>
 <section class="karte">{% include "seite/personen.html" with personen=t.holders ohne_datum=True %}</section>{% endwith %}
 {% else %}
-<h1>Ehrungen</h1>
-{% for t in honorary %}<section class="karte"><h2>{{ t.heading|default:t.title }}</h2>{% include "seite/personen.html" with personen=t.holders ohne_datum=True %}</section>{% empty %}<p>Hier stehen noch keine Angaben.</p>{% endfor %}
+<h1>{% translate "Ehrungen" %}</h1>
+{% for t in honorary %}<section class="karte"><h2>{{ t.heading|default:t.title }}</h2>{% include "seite/personen.html" with personen=t.holders ohne_datum=True %}</section>{% empty %}<p>{% translate "Hier stehen noch keine Angaben." %}</p>{% endfor %}
 {% endif %}
 {% endblock %}
